@@ -3,38 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <title>DEMANDES DE GARDES CS VERDUN</title>
-
   <style>
-    * { box-sizing: border-box; }
-
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
       background: #f3f3f3;
+      font-family: Arial, sans-serif;
+      user-select: none;
     }
 
-    /* HEADER */
+    /* HEADER BANDEAU */
     #header {
       background: #0c1f45;
       color: #fff;
-      text-align: center;
-      padding: 14px;
-      font-size: 1.7em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 12px 8px;
+      font-size: 1.6em;
       font-weight: bold;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
     }
 
     /* CONTROLS */
-    #controls, #month-year {
+    #controls {
       max-width: 1200px;
       margin: 10px auto;
       padding: 0 10px;
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
       align-items: center;
+      justify-content: space-between;
+      gap: 6px;
     }
-
+    #controls-left,
+    #controls-right {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
     .btn {
       padding: 6px 12px;
       border-radius: 20px;
@@ -48,12 +60,19 @@
       border-color: #e2b000;
       font-weight: bold;
     }
+    #current-agent-select {
+      padding: 4px;
+      font-size: 0.9em;
+    }
 
+    /* Onglets admin (en haut, à côté d'Administrateur) */
     #admin-tabs {
       display: none;
       gap: 6px;
+      align-items: center;
     }
 
+    /* Badge d'équipe */
     #team-badge {
       display: none;
       padding: 3px 10px;
@@ -63,105 +82,126 @@
       border: 1px solid #444;
     }
 
-    /* WRAPPER TABLEAU */
+    /* MOIS / ANNÉE */
+    #month-year {
+      max-width: 1200px;
+      margin: 0 auto 12px auto;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    #select-month {
+      width: 130px;
+    }
+    #select-year {
+      width: 80px;
+    }
+
+    /* WRAPPER TABLE */
     .wrapper {
       max-width: 1200px;
       margin: 0 auto;
       background: #ffffff;
       padding: 8px;
       border-radius: 8px;
-      box-shadow: 0 0 6px rgba(0,0,0,0.2);
-      overflow: auto;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+      overflow-x: auto;
+      overflow-y: hidden;
     }
 
     table {
       border-collapse: separate;
       border-spacing: 0;
-      min-width: 2600px;
+      /* on laisse le tableau s’étaler et on scrolle horizontalement */
+      min-width: 3200px;
       table-layout: fixed;
     }
-
-    th, td {
+    th,
+    td {
       border: 1px solid #444;
       padding: 4px;
       font-size: 0.82em;
       text-align: center;
-      white-space: nowrap;
-      min-width: 95px;
       background: #ffffff;
+      white-space: nowrap;
+      /* chaque jour a une largeur minimale pour voir le texte */
+      min-width: 95px;
     }
 
+    /* les selects occupent toute la case */
     td select {
       width: 100%;
       box-sizing: border-box;
-      font-size: 0.8em;
     }
 
-    /* COLONNE AGENTS FIXE À GAUCHE */
-    .name-header,
+    /* COLONNE AGENTS */
+    .name-header {
+      position: sticky;
+      left: 0;
+      z-index: 50;
+      background: rgb(246, 64, 77); /* rouge demandé */
+      color: #ffffff;
+      min-width: 220px;
+    }
     .name-cell {
       position: sticky;
       left: 0;
-      z-index: 200;
-      min-width: 200px;
-    }
-
-    .name-header {
-      background: rgb(246, 64, 77);
-      color: #ffffff;
-      font-weight: bold;
-    }
-
-    .name-cell {
+      z-index: 40;
       background: #e0e0e0;
       text-align: left;
       padding-left: 8px;
-      box-shadow: 4px 0 4px rgba(0,0,0,0.25);
+      min-width: 220px;
+      box-shadow: 4px 0 4px rgba(0, 0, 0, 0.25); /* masque ce qui passe derrière */
+    }
+    .team-1 {
+      background: #9dc3e6 !important; /* bleu équipe 1 */
+    }
+    .team-2 {
+      background: #ffe699 !important; /* jaune équipe 2 */
     }
 
-    .team-1 { background: #9dc3e6 !important; }
-    .team-2 { background: #ffe699 !important; }
-
-    /* STICKY TOP (SEMAINES / JOURS) */
-    .weeks-row th {
-      position: sticky;
-      top: 0;
-      z-index: 150;
-      background: #ffffff;
+    /* WEEK-END / FÉRIÉS */
+    .weekend {
+      background: #dbe6ff !important;
     }
-    .dates-row th {
-      position: sticky;
-      top: 26px;
-      z-index: 150;
-      background: #ffffff;
-    }
-    .days-row th {
-      position: sticky;
-      top: 52px;
-      z-index: 150;
-      background: #ffffff;
+    .holiday {
+      background: #c8f2c8 !important;
     }
 
-    /* WEEK-END & FÉRIÉS */
-    .weekend { background: #dbe6ff !important; }
-    .holiday { background: #c8f2c8 !important; }
+    /* STICKY LIGNES EN PAYSAGE */
+    @media (orientation: landscape) {
+      .weeks-row th {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+      }
+      .dates-row th {
+        position: sticky;
+        top: 26px;
+        z-index: 30;
+      }
+      .days-row th {
+        position: sticky;
+        top: 52px;
+        z-index: 30;
+      }
+    }
 
-    /* INTERDICTIONS */
-    .interd-team1 { background: #9dc3e6 !important; }
-    .interd-team2 { background: #ffe699 !important; }
-    .interd-all { background: #f4b184 !important; }
-
-    /* PANNEAU PARAMÈTRES ADMIN */
+    /* PARAMÈTRES ADMIN */
     #parametres-panel {
-      max-width: 700px;
-      margin: 20px auto;
-      padding: 10px;
+      max-width: 1200px;
+      margin: 14px auto 20px auto;
+      padding: 14px;
       background: #ffffff;
       border-radius: 8px;
-      box-shadow: 0 0 6px rgba(0,0,0,0.2);
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
       display: none;
     }
-
+    #parametres-panel h2 {
+      margin-top: 0;
+    }
     .table-admin {
       width: 100%;
       border-collapse: collapse;
@@ -170,43 +210,65 @@
     .table-admin th,
     .table-admin td {
       border: 1px solid #ccc;
-      padding: 4px;
-      font-size: 0.8em;
+      padding: 6px;
+      font-size: 0.85em;
       text-align: left;
     }
-
-    .small-input { width: 30px; }
-    .full-input { width: 70%; }
-
-    .col-centered {
-      text-align: center;
-      width: 50px;
+    .small-input {
+      width: 80px;
     }
-
+    .full-input {
+      width: 100%;
+    }
+    .eye-btn {
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-
-  <div id="header">DEMANDES DE GARDES CS VERDUN</div>
-
-  <div id="controls">
-    <span>Mode :</span>
-    <button id="btn-mode-agent" class="btn active">Agent</button>
-    <button id="btn-mode-admin" class="btn">Administrateur</button>
-
-    <div id="admin-tabs">
-      <button id="btn-admin-agents" class="btn active">Agents</button>
-      <button id="btn-admin-interd" class="btn">Interdictions</button>
-    </div>
-
-    <span id="block-agent-select">
-      Je suis :
-      <select id="current-agent-select"></select>
-    </span>
-
-    <span id="team-badge"></span>
+  <!-- HEADER -->
+  <div id="header">
+    DEMANDES DE GARDES CS VERDUN
   </div>
 
+  <!-- CONTROLS -->
+  <div id="controls">
+    <div id="controls-left">
+      <span>Mode :</span>
+      <button id="btn-mode-agent" class="btn active">Agent</button>
+      <button id="btn-mode-admin" class="btn">Administrateur</button>
+
+      <!-- Onglets admin (uniquement visibles en mode Admin) -->
+      <div id="admin-tabs">
+        <button id="btn-admin-agents" class="btn active">Agents</button>
+        <button id="btn-admin-interd" class="btn">Interdictions</button>
+      </div>
+
+      <span id="block-agent-select">
+        Je suis :
+        <select id="current-agent-select">
+          <option value="">-- choisir agent --</option>
+        </select>
+      </span>
+
+      <!-- Badge d'équipe -->
+      <span id="team-badge"></span>
+
+      <button id="btn-change-pwd" class="btn" style="display: none">
+        Changer mon mot de passe
+      </button>
+    </div>
+
+    <div id="controls-right">
+      <button id="btn-change-admin-pwd" class="btn" style="display: none">
+        Changer mot de passe admin
+      </button>
+    </div>
+  </div>
+
+  <!-- MOIS / ANNÉE -->
   <div id="month-year">
     <span>Mois :</span>
     <select id="select-month"></select>
@@ -214,430 +276,1044 @@
     <select id="select-year"></select>
   </div>
 
+  <!-- TABLE PLANNING -->
   <div class="wrapper">
     <table id="planning"></table>
   </div>
 
+  <!-- PARAMÈTRES ADMIN -->
   <div id="parametres-panel">
-    <h3>Paramètres administrateur</h3>
+    <h2>⚙ Paramètres administrateur</h2>
 
-    <!-- Onglet Agents -->
+    <!-- Panneau Agents -->
     <div id="panel-agents">
-      <h4>Agents</h4>
+      <h3>Agents</h3>
+      <p>Réglez la visibilité, l'équipe, le quota et les mots de passe provisoires.</p>
       <table id="table-param-agents" class="table-admin">
         <tr>
           <th>Agent</th>
-          <th class="col-centered">Aff.</th>
-          <th class="col-centered">Éq.</th>
-          <th class="col-centered">Quota</th>
-          <th class="col-centered">Pwd provisoire</th>
-          <th class="col-centered">X</th>
+          <th>Afficher</th>
+          <th>Équipe</th>
+          <th>Quota (gardes)</th>
+          <th>Mot de passe provisoire</th>
+          <th>Réinitialiser mot de passe</th>
         </tr>
       </table>
-      <button id="btn-add-agent" class="btn">+ Ajouter un agent</button>
     </div>
 
-    <!-- Onglet Interdictions -->
-    <div id="panel-interdictions" style="display:none;">
-      <h4>Interdictions</h4>
+    <!-- Panneau Interdictions -->
+    <div id="panel-interdictions" style="display: none">
+      <h3>Interdictions</h3>
+      <p>
+        Les jours ajoutés ici seront colorés et bloqués pour l'équipe concernée
+        (ou pour tous en cas de manœuvre commune ou autre interdiction
+        générale).
+      </p>
       <table id="table-interdictions" class="table-admin">
         <tr>
           <th>Date</th>
           <th>Équipe</th>
           <th>Type</th>
-          <th>Note</th>
-          <th class="col-centered">X</th>
+          <th>Note (si "Autre")</th>
+          <th>Supprimer</th>
         </tr>
       </table>
-      <button id="btn-add-interdiction" class="btn">+ Ajouter une interdiction</button>
+
+      <button id="btn-add-interdiction" class="btn">
+        + Ajouter une interdiction
+      </button>
     </div>
   </div>
 
   <script>
-    /* ==========================
-       CONSTANTES
-    =========================== */
-    const MONTH_NAMES = [
-      "Janvier","Février","Mars","Avril","Mai","Juin",
-      "Juillet","Août","Septembre","Octobre","Novembre","Décembre"
+    /* ==============================
+       DONNÉES DE BASE
+       ============================== */
+    const AGENTS = [
+      "BAMME M",
+      "BAROTTE C",
+      "BAUR B",
+      "CHRISTAL E",
+      "CHRISTAL M",
+      "GAFFARD R",
+      "JOSEPH J",
+      "LALEEUW F",
+      "MICHEL M",
+      "ROGIE F",
+      "SABOURET BAROTTE M",
+      "SENECHAL B",
+      "STELLATO V",
+      "TRONTIN C",
+      "VENANTE A",
+      "VENANTE P",
+      "WALLARIN H"
     ];
 
-    const GUARD_TYPES = {
-      "": { label:"", bg:"", color:"#000" },
-      "G24": { label:"G 24", bg:"#f9cb9c", color:"#000" },
-      "G12J": { label:"G 12 J", bg:"#a2c4c9", color:"#000" },
-      "G12N": { label:"G 12 N", bg:"#d9d2e9", color:"#000" },
-      "H2GM": { label:"1/2 G Matin", bg:"#d9a7ff", color:"#000" },
-      "H2GA": { label:"1/2 G AM", bg:"#b6d7a8", color:"#000" }
-    };
-
-    const HOLIDAYS_2026 = [
-      "2026-01-01","2026-04-06","2026-05-01","2026-05-08",
-      "2026-05-14","2026-05-25","2026-07-14","2026-08-15",
-      "2026-11-01","2026-11-11","2026-12-25"
+    const CHOIX = [
+      "",
+      "Garde 24",
+      "Garde 12 J",
+      "Garde 12 N",
+      "1/2 G matin",
+      "1/2 G après-midi"
     ];
 
-    /* ==========================
-       DONNÉES EN MÉMOIRE
-    =========================== */
-
-    // Agents
-    let agents = [
-      {name:"BAMME M", visible:true, team:1, quota:2, pwd:"1111"},
-      {name:"BAROTTE C", visible:true, team:2, quota:2, pwd:"1111"},
-      {name:"BAUR B", visible:true, team:1, quota:2, pwd:"1111"},
-      {name:"CHRISTAL E", visible:true, team:1, quota:2, pwd:"1111"},
-      {name:"CHRISTAL M", visible:true, team:1, quota:2, pwd:"1111"},
-      {name:"GAFFARD R", visible:true, team:1, quota:2, pwd:"1111"},
-      {name:"JOSEPH J", visible:true, team:2, quota:2, pwd:"1111"},
-      {name:"LALEEUW F", visible:true, team:2, quota:2, pwd:"1111"},
-      {name:"MICHEL M", visible:true, team:2, quota:2, pwd:"1111"},
-      {name:"ROGIE F", visible:true, team:1, quota:2, pwd:"1111"},
-      {name:"SABOURET BAROTTE M", visible:true, team:2, quota:2, pwd:"1111"},
-      {name:"SENECHAL B", visible:true, team:2, quota:2, pwd:"1111"},
-      {name:"STELLATO V", visible:true, team:1, quota:2, pwd:"1111"},
-      {name:"TRONTIN C", visible:true, team:1, quota:2, pwd:"1111"},
-      {name:"VENANTE A", visible:true, team:2, quota:2, pwd:"1111"},
-      {name:"VENANTE P", visible:true, team:2, quota:2, pwd:"1111"},
-      {name:"WALLARIN H", visible:true, team:1, quota:2, pwd:"1111"}
+    const MONTHS = [
+      { value: 0, label: "Janvier" },
+      { value: 1, label: "Février" },
+      { value: 2, label: "Mars" },
+      { value: 3, label: "Avril" },
+      { value: 4, label: "Mai" },
+      { value: 5, label: "Juin" },
+      { value: 6, label: "Juillet" },
+      { value: 7, label: "Août" },
+      { value: 8, label: "Septembre" },
+      { value: 9, label: "Octobre" },
+      { value: 10, label: "Novembre" },
+      { value: 11, label: "Décembre" }
     ];
+    const YEARS = [2026, 2027, 2028];
 
-    // Mot de passe administrateur
-    let adminPassword = "admin";
-
-    // Interdictions
-    // {date:"YYYY-MM-DD", team:"1"|"2"|"TOUS", type:"E1"|"E2"|"COM"|"AUTRE", note:""}
-    let interdictions = [];
-
-    // Données de planning
-    // clé : "YYYY-MM-DD|Nom agent" -> type de garde (clé GUARD_TYPES)
-    let planningData = {};
-
-    /* ==========================
-       PERSISTANCE LOCALSTORAGE
-    =========================== */
-    function saveAll() {
-      localStorage.setItem("cs_agents", JSON.stringify(agents));
-      localStorage.setItem("cs_admin_pwd", adminPassword);
-      localStorage.setItem("cs_interdictions", JSON.stringify(interdictions));
-      localStorage.setItem("cs_planning", JSON.stringify(planningData));
+    function getMonthId(year, monthIndex) {
+      return `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
     }
 
-    function loadAll() {
+    /* Jours fériés (exemple – à compléter si besoin) */
+    const HOLIDAYS = new Set([
+      "2026-01-01"
+    ]);
+
+    /* ==============================
+       MOT DE PASSE ADMIN
+       ============================== */
+    let adminPassword = "1122";
+    const ADMIN_PWD_KEY = "planning_admin_password_v1";
+
+    function loadAdminPassword() {
       try {
-        const a = localStorage.getItem("cs_agents");
-        if (a) agents = JSON.parse(a);
-        const p = localStorage.getItem("cs_admin_pwd");
-        if (p) adminPassword = p;
-        const i = localStorage.getItem("cs_interdictions");
-        if (i) interdictions = JSON.parse(i);
-        const pl = localStorage.getItem("cs_planning");
-        if (pl) planningData = JSON.parse(pl);
-      } catch(e) {
-        console.error("Erreur de chargement localStorage", e);
-      }
+        const raw = localStorage.getItem(ADMIN_PWD_KEY);
+        if (raw) adminPassword = raw;
+      } catch (e) {}
     }
-    loadAll();
-
-    /* ==========================
-       OUTILS DATES
-    =========================== */
-    function pad2(n) { return (n < 10 ? "0" : "") + n; }
-
-    function getIsoDate(year, monthIndex, day) {
-      return year + "-" + pad2(monthIndex + 1) + "-" + pad2(day);
+    function saveAdminPassword() {
+      localStorage.setItem(ADMIN_PWD_KEY, adminPassword);
     }
 
-    function isWeekend(dateObj) {
-      const d = dateObj.getDay(); // 0 = dimanche, 6 = samedi
-      return d === 0 || d === 6;
+    /* ==============================
+       MOTS DE PASSE AGENTS
+       ============================== */
+    let agentPasswords = {};
+    let agentPasswordDefaults = {};
+    const PASSWORDS_KEY = "planning_passwords_v4";
+
+    function loadPasswords() {
+      try {
+        const raw = localStorage.getItem(PASSWORDS_KEY);
+        if (raw) {
+          const saved = JSON.parse(raw);
+          agentPasswords = saved.agentPasswords || {};
+          agentPasswordDefaults = saved.agentPasswordDefaults || {};
+        }
+      } catch (e) {}
+    }
+    function savePasswords() {
+      localStorage.setItem(
+        PASSWORDS_KEY,
+        JSON.stringify({ agentPasswords, agentPasswordDefaults })
+      );
     }
 
-    function isHoliday(dateStr) {
-      // pour le moment, on ne gère que 2026
-      return HOLIDAYS_2026.indexOf(dateStr) !== -1;
-    }
-
-    function getWeekNumber(day, monthIndex, year) {
-      const d = new Date(year, monthIndex, day);
-      const first = new Date(year, monthIndex, 1);
-      const diff = d.getDate() + first.getDay() - 1;
-      return Math.floor(diff / 7) + 1;
-    }
-
-    function getDayName(dateObj) {
-      const names = ["dim.","lun.","mar.","mer.","jeu.","ven.","sam."];
-      return names[dateObj.getDay()];
-    }
-
-    /* ==========================
-       SELECT MOIS / ANNÉE
-    =========================== */
-    const selectMonth = document.getElementById("select-month");
-    const selectYear = document.getElementById("select-year");
-
-    function initMonthYearSelectors() {
-      selectMonth.innerHTML = "";
-      MONTH_NAMES.forEach(function(name, idx) {
-        const opt = document.createElement("option");
-        opt.value = idx;
-        opt.textContent = name;
-        selectMonth.appendChild(opt);
+    function initDefaultPasswords() {
+      AGENTS.forEach(agent => {
+        if (!agentPasswordDefaults[agent]) {
+          agentPasswordDefaults[agent] = "0000";
+        }
+        if (!agentPasswords[agent]) {
+          agentPasswords[agent] = agentPasswordDefaults[agent];
+        }
       });
-
-      selectYear.innerHTML = "";
-      for (let y = 2025; y <= 2028; y++) {
-        const opt = document.createElement("option");
-        opt.value = y;
-        opt.textContent = y;
-        selectYear.appendChild(opt);
-      }
-
-      const now = new Date();
-      selectMonth.value = now.getMonth();
-      selectYear.value = now.getFullYear();
     }
 
-    /* ==========================
-       GESTION AGENTS & BADGE
-    =========================== */
-    const agentSelect = document.getElementById("current-agent-select");
-    const teamBadge = document.getElementById("team-badge");
+    /* ==============================
+       QUOTAS
+       ============================== */
+    let quotas = {
+      "VENANTE P": 2,
+      "LALEEUW F": 3,
+      "BAROTTE C": 2,
+      "VENANTE A": 2,
+      "CHRISTAL M": 2,
+      "CHRISTAL E": 2,
+      "BAUR B": 2,
+      "MICHEL M": 2,
+      "ROGIE F": 2,
+      "SENECHAL B": 2,
+      "WALLARIN H": 2,
+      "STELLATO V": 2,
+      "TRONTIN C": 2,
+      "GAFFARD R": 2,
+      "JOSEPH J": 2,
+      "BAMME M": 2
+    };
+    const QUOTAS_KEY = "planning_consenvoye_quotas_v5";
 
-    function refreshAgentSelect() {
-      agentSelect.innerHTML = "";
-      const visibleAgents = agents.filter(a => a.visible);
-      visibleAgents.sort((a, b) => a.name.localeCompare(b.name));
+    function loadQuotas() {
+      try {
+        const raw = localStorage.getItem(QUOTAS_KEY);
+        if (raw) {
+          const saved = JSON.parse(raw);
+          quotas = { ...quotas, ...saved };
+        }
+      } catch (e) {}
+    }
+    function saveQuotas() {
+      localStorage.setItem(QUOTAS_KEY, JSON.stringify(quotas));
+    }
 
-      visibleAgents.forEach(function(ag) {
-        const opt = document.createElement("option");
-        opt.value = ag.name;
-        opt.textContent = ag.name;
-        agentSelect.appendChild(opt);
-      });
+    /* ==============================
+       EQUIPES
+       ============================== */
+    let teams = {}; // "1" / "2" / ""
+    const TEAMS_KEY = "planning_consenvoye_teams_v1";
 
-      if (visibleAgents.length === 0) {
-        teamBadge.style.display = "none";
-      } else {
-        agentSelect.selectedIndex = 0;
-        updateTeamBadge(agentSelect.value);
+    function loadTeams() {
+      try {
+        const raw = localStorage.getItem(TEAMS_KEY);
+        if (raw) teams = JSON.parse(raw);
+      } catch (e) {}
+    }
+    function saveTeams() {
+      localStorage.setItem(TEAMS_KEY, JSON.stringify(teams));
+    }
+
+    /* ==============================
+       VISIBILITÉ AGENTS
+       ============================== */
+    let agentVisible = {};
+    const VIS_KEY = "planning_consenvoye_visible_v1";
+
+    function loadAgentVisible() {
+      try {
+        const raw = localStorage.getItem(VIS_KEY);
+        if (raw) agentVisible = JSON.parse(raw);
+      } catch (e) {}
+    }
+    function saveAgentVisible() {
+      localStorage.setItem(VIS_KEY, JSON.stringify(agentVisible));
+    }
+
+    /* ==============================
+       INTERDICTIONS
+       ============================== */
+    /*
+      {
+        date: "YYYY-MM-DD",
+        team: "1" | "2" | "TOUS",
+        noteType: "EQ1" | "EQ2" | "COMMUNE" | "AUTRE",
+        customNote: ""
+      }
+    */
+    let interdictions = [];
+    const INTERD_KEY = "planning_consenvoye_interd_v2";
+
+    function normalizeInterdiction(it) {
+      if (!it.team) it.team = "1";
+      if (!it.noteType) it.noteType = "EQ1";
+      if (!it.customNote) it.customNote = "";
+      if (it.note && !it.customNote && it.noteType === "AUTRE") {
+        it.customNote = it.note;
+      }
+      return it;
+    }
+    function loadInterdictions() {
+      try {
+        const raw = localStorage.getItem(INTERD_KEY);
+        if (raw) {
+          const arr = JSON.parse(raw);
+          interdictions = arr.map(normalizeInterdiction);
+        }
+      } catch (e) {}
+    }
+    function saveInterdictions() {
+      localStorage.setItem(INTERD_KEY, JSON.stringify(interdictions));
+    }
+
+    function getInterdictionForDate(dateISO) {
+      return interdictions.filter(it => it.date === dateISO);
+    }
+
+    function getInterdictionsForAgent(dateISO, agent) {
+      const its = getInterdictionForDate(dateISO);
+      if (!its.length) return [];
+
+      const team = teams[agent] || "";
+
+      // Manœuvre Commune ou Autre => bloque tout le monde
+      const communeOrAutre = its.filter(
+        it => it.noteType === "COMMUNE" || it.noteType === "AUTRE"
+      );
+      if (communeOrAutre.length) return communeOrAutre;
+
+      // Sinon : blocage par équipe ou TOUS
+      return its.filter(it => it.team === "TOUS" || (team && it.team === team));
+    }
+
+    function getInterdictionReasonText(it) {
+      switch (it.noteType) {
+        case "EQ1":
+          return "Manœuvre Équipe 1";
+        case "EQ2":
+          return "Manœuvre Équipe 2";
+        case "COMMUNE":
+          return "Manœuvre Commune";
+        case "AUTRE":
+          return it.customNote || "Autre";
+        default:
+          return "Interdiction";
       }
     }
 
-    function updateTeamBadge(agentName) {
-      const a = agents.find(x => x.name === agentName);
-      if (!a) {
-        teamBadge.style.display = "none";
+    function getInterdictionColorForDate(dateISO) {
+      const its = getInterdictionForDate(dateISO);
+      if (!its.length) return null;
+
+      if (its.some(it => it.noteType === "COMMUNE" || it.noteType === "AUTRE")) {
+        return "#f4b184"; // tous
+      }
+      if (its.some(it => it.team === "1")) return "#9dc3e6";
+      if (its.some(it => it.team === "2")) return "#ffe699";
+      if (its.some(it => it.team === "TOUS")) return "#f4b184";
+      return null;
+    }
+
+    /* ==============================
+       DONNÉES PLANNING
+       ============================== */
+    let data = {};
+    const DATA_KEY = "planning_consenvoye_v6";
+
+    function loadData() {
+      try {
+        const raw = localStorage.getItem(DATA_KEY);
+        if (raw) data = JSON.parse(raw);
+        else data = {};
+      } catch (e) {
+        data = {};
+      }
+    }
+    function saveData() {
+      localStorage.setItem(DATA_KEY, JSON.stringify(data));
+    }
+
+    /* ==============================
+       VARIABLES COURANTES
+       ============================== */
+    let currentMode = "agent";
+    let currentAgent = "";
+    let currentYear = YEARS[0];
+    let currentMonthIndex = 0;
+    let currentMonthId = getMonthId(currentYear, currentMonthIndex);
+
+    /* ==============================
+       VALEUR GARDE
+       ============================== */
+    function valeurGarde(val) {
+      switch (val) {
+        case "Garde 24":
+          return 2;
+        case "Garde 12 J":
+          return 1;
+        case "Garde 12 N":
+          return 1;
+        case "1/2 G matin":
+          return 0.5;
+        case "1/2 G après-midi":
+          return 0.5;
+        default:
+          return 0;
+      }
+    }
+
+    function totalGardes(agent, moisID) {
+      let total = 0;
+      if (!data[moisID]) return 0;
+      for (const date in data[moisID]) {
+        const tab = data[moisID][date];
+        for (const nom in tab) {
+          if (nom === agent) total += valeurGarde(tab[nom]);
+        }
+      }
+      return total;
+    }
+
+    /* ==============================
+       NUMÉRO DE SEMAINE
+       ============================== */
+    function getISOWeek(date) {
+      const tmp = new Date(
+        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+      );
+      const dayNum = tmp.getUTCDay() || 7;
+      tmp.setUTCDate(tmp.getUTCDate() + 4 - dayNum);
+      const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+      const weekNo = Math.ceil(((tmp - yearStart) / 86400000 + 1) / 7);
+      return weekNo;
+    }
+
+    /* ==============================
+       DROITS DE MODIFICATION
+       ============================== */
+    function checkCanEdit(agent) {
+      if (currentMode === "admin") return null;
+      if (!currentAgent) {
+        return "Veuillez d'abord vous identifier en sélectionnant votre nom.";
+      }
+      if (agent !== currentAgent) {
+        return "Vous ne pouvez modifier que votre propre ligne.";
+      }
+      return null;
+    }
+
+    /* ==============================
+       IMPOSSIBILITÉS
+       ============================== */
+    function getImpossibleReason(moisID, dateISO, agent, oldValue, newValue) {
+      const day = data[moisID][dateISO] || {};
+
+      // Interdictions
+      if (newValue !== "") {
+        const its = getInterdictionsForAgent(dateISO, agent);
+        if (its.length) {
+          const reasonText = getInterdictionReasonText(its[0]);
+          return (
+            "Jour interdit pour votre équipe. Raison : " + reasonText + "."
+          );
+        }
+      }
+
+      // Autre agent en 24h
+      for (const other in day) {
+        if (day[other] === "Garde 24" && other !== agent && newValue !== "") {
+          return "Ce créneau est impossible. Déjà un agent en place.";
+        }
+      }
+
+      // On veut mettre 24h alors qu'il y a déjà quelque chose
+      if (newValue === "Garde 24") {
+        for (const other in day) {
+          if (day[other] !== "" && other !== agent) {
+            return "Ce créneau est impossible. Déjà un agent en place.";
+          }
+        }
+      }
+
+      // Incompatibilités
+      for (const other in day) {
+        const val = day[other];
+        if (other === agent) continue;
+
+        if (newValue === "Garde 12 J" && val === "Garde 12 J")
+          return "Ce créneau est impossible. Déjà un agent en place.";
+        if (newValue === "Garde 12 N" && val === "Garde 12 N")
+          return "Ce créneau est impossible. Déjà un agent en place.";
+        if (newValue === "1/2 G matin" && val === "1/2 G matin")
+          return "Ce créneau est impossible. Déjà un agent en place.";
+        if (newValue === "1/2 G après-midi" && val === "1/2 G après-midi")
+          return "Ce créneau est impossible. Déjà un agent en place.";
+
+        if (
+          newValue === "Garde 12 J" &&
+          (val === "1/2 G matin" || val === "1/2 G après-midi")
+        )
+          return "Ce créneau est impossible. Déjà un agent en place.";
+
+        if (
+          val === "Garde 12 J" &&
+          (newValue === "1/2 G matin" || newValue === "1/2 G après-midi")
+        )
+          return "Ce créneau est impossible. Déjà un agent en place.";
+      }
+
+      // Quota
+      const quota = quotas[agent] ?? 0;
+      const total = totalGardes(agent, moisID);
+      const ancien = valeurGarde(oldValue);
+      const ajout = valeurGarde(newValue);
+      const totalSansCase = total - ancien;
+
+      if (totalSansCase + ajout > quota) {
+        return "Ce créneau est impossible. Quota mensuel atteint.";
+      }
+
+      return null;
+    }
+
+    /* ==============================
+       STYLE DES CELLULES
+       ============================== */
+    function applyCellStyle(value, td, select) {
+      // On laisse weekend/férié/interdiction gérer le fond si vide
+      td.style.backgroundColor = "";
+      select.style.backgroundColor = "#ffffff";
+      select.style.color = "#000000";
+      select.style.fontWeight = "normal";
+
+      if (!value) {
         return;
       }
-      teamBadge.style.display = "inline-block";
-      if (a.team === 1) {
-        teamBadge.textContent = "Équipe 1";
-        teamBadge.style.background = "#9dc3e6";
-      } else if (a.team === 2) {
-        teamBadge.textContent = "Équipe 2";
-        teamBadge.style.background = "#ffe699";
-      } else {
-        teamBadge.textContent = "-";
-        teamBadge.style.background = "#dddddd";
+
+      let bg = "";
+      let textColor = "#000000";
+
+      switch (value) {
+        case "Garde 24":
+          bg = "#ffd39b"; // orange clair
+          break;
+        case "Garde 12 J":
+          bg = "#40e0d0"; // turquoise
+          break;
+        case "Garde 12 N":
+          bg = "#d9d9d9"; // gris pastel
+          break;
+        case "1/2 G matin":
+          bg = "#e6ccff"; // violet clair
+          break;
+        case "1/2 G après-midi":
+          bg = "#006a4e"; // vert bouteille
+          textColor = "#ffffff";
+          break;
       }
+
+      td.style.backgroundColor = bg;
+      select.style.backgroundColor = bg;
+      select.style.color = textColor;
+      select.style.fontWeight = "bold";
     }
 
-    agentSelect.addEventListener("change", function() {
-      updateTeamBadge(this.value);
-    });
+    /* ==============================
+       DATES EN ROUGE SI GARDE
+       ============================== */
+    function updateDayHeaders() {
+      const table = document.getElementById("planning");
+      const headerRow = table.querySelector("tr.dates-row");
+      if (!headerRow) return;
 
-    /* ==========================
-       CONSTRUCTION DU PLANNING
-    =========================== */
-    const planningTable = document.getElementById("planning");
+      const moisID = currentMonthId;
+      headerRow.querySelectorAll("th[data-date]").forEach(th => {
+        const dateISO = th.getAttribute("data-date");
+        const dayData = (data[moisID] && data[moisID][dateISO]) || {};
+        let used = false;
+        for (const a in dayData) {
+          if (dayData[a]) used = true;
+        }
+        th.style.color = used ? "red" : "black";
+      });
+    }
 
-    function buildPlanning() {
-      const monthIndex = parseInt(selectMonth.value, 10);
-      const year = parseInt(selectYear.value, 10);
+    /* ==============================
+       COLORATION INTERDICTIONS COLONNE
+       ============================== */
+    function applyInterdictionStyles() {
+      const table = document.getElementById("planning");
+      const datesRow = table.querySelector("tr.dates-row");
+      const daysRow = table.querySelector("tr.days-row");
+      const emptyRow = table.querySelector("tr.empty-row");
+      if (!datesRow || !daysRow || !emptyRow) return;
 
-      // nombre de jours dans le mois
+      const dateHeaders = Array.from(datesRow.querySelectorAll("th[data-date]"));
+      const allRows = table.rows;
+
+      dateHeaders.forEach((th, index) => {
+        const dateISO = th.getAttribute("data-date");
+        const color = getInterdictionColorForDate(dateISO);
+        if (!color) return;
+
+        // date
+        th.style.backgroundColor = color;
+
+        // jour (ligne jours) : même index (pas de colonne AGENT ici)
+        if (daysRow.cells[index]) {
+          daysRow.cells[index].style.backgroundColor = color;
+        }
+
+        // ligne vide
+        if (emptyRow.cells[index]) {
+          emptyRow.cells[index].style.backgroundColor = color;
+        }
+
+        // lignes agents : +1 (colonne 0 = AGENT)
+        for (let r = 4; r < allRows.length; r++) {
+          const row = allRows[r];
+          const cell = row.cells[index + 1];
+          if (!cell) continue;
+          const sel = cell.querySelector("select");
+          if (sel && sel.value) continue; // laisse la couleur de garde
+          cell.style.backgroundColor = color;
+        }
+      });
+    }
+
+    /* ==============================
+       CONSTRUCTION DU MOIS
+       ============================== */
+    function buildMonth(year, monthIndex) {
+      currentYear = year;
+      currentMonthIndex = monthIndex;
+      currentMonthId = getMonthId(year, monthIndex);
+
+      const table = document.getElementById("planning");
+      table.innerHTML = "";
+
       const nbDays = new Date(year, monthIndex + 1, 0).getDate();
+      if (!data[currentMonthId]) data[currentMonthId] = {};
 
-      planningTable.innerHTML = "";
+      // numéros de semaine
+      const weekNumbers = [];
+      for (let d = 1; d <= nbDays; d++) {
+        const dateObj = new Date(year, monthIndex, d);
+        weekNumbers.push(getISOWeek(dateObj));
+      }
 
-      // ---- Ligne SEMAINE ----
-      const trWeek = document.createElement("tr");
-      trWeek.className = "weeks-row";
+      // Ligne semaines + AGENTS
+      const trWeeks = document.createElement("tr");
+      trWeeks.className = "weeks-row";
 
       const thName = document.createElement("th");
-      thName.className = "name-header";
+      thName.rowSpan = 4;
       thName.textContent = "AGENTS";
-      trWeek.appendChild(thName);
+      thName.className = "name-header";
+      trWeeks.appendChild(thName);
 
-      for (let d = 1; d <= nbDays; d++) {
-        const th = document.createElement("th");
-        const w = getWeekNumber(d, monthIndex, year);
-        th.textContent = "Semaine " + pad2(w);
-        th.setAttribute("data-day", d);
-        trWeek.appendChild(th);
+      let i = 0;
+      while (i < nbDays) {
+        const currentWeek = weekNumbers[i];
+        let span = 1;
+        while (i + span < nbDays && weekNumbers[i + span] === currentWeek) {
+          span++;
+        }
+        const thWeek = document.createElement("th");
+        thWeek.colSpan = span;
+        thWeek.textContent = "Semaine " + currentWeek; // <<< Semaine 1, 2, 3...
+        trWeeks.appendChild(thWeek);
+        i += span;
       }
-      planningTable.appendChild(trWeek);
+      table.appendChild(trWeeks);
 
-      // ---- Ligne NUMÉRO DE JOUR ----
+      // Ligne dates
       const trDates = document.createElement("tr");
       trDates.className = "dates-row";
-
-      const thBlank1 = document.createElement("th");
-      thBlank1.className = "name-header";
-      thBlank1.textContent = "";
-      trDates.appendChild(thBlank1);
-
       for (let d = 1; d <= nbDays; d++) {
         const th = document.createElement("th");
-        th.textContent = pad2(d);
-        th.setAttribute("data-day", d);
+        const dateISO = `${year}-${String(monthIndex + 1).padStart(
+          2,
+          "0"
+        )}-${String(d).padStart(2, "0")}`;
+        const dayObj = new Date(year, monthIndex, d);
 
-        const dateObj = new Date(year, monthIndex, d);
-        const iso = getIsoDate(year, monthIndex, d);
-        if (isWeekend(dateObj)) th.classList.add("weekend");
-        if (isHoliday(iso)) th.classList.add("holiday");
+        th.textContent = d.toString().padStart(2, "0");
+        th.setAttribute("data-date", dateISO);
+
+        if (dayObj.getDay() === 0 || dayObj.getDay() === 6)
+          th.classList.add("weekend");
+        if (HOLIDAYS.has(dateISO)) th.classList.add("holiday");
 
         trDates.appendChild(th);
       }
-      planningTable.appendChild(trDates);
+      table.appendChild(trDates);
 
-      // ---- Ligne JOUR SEMAINE ----
-      const trDays = document.createElement("tr");
-      trDays.className = "days-row";
-
-      const thBlank2 = document.createElement("th");
-      thBlank2.className = "name-header";
-      thBlank2.textContent = "";
-      trDays.appendChild(thBlank2);
-
+      // Ligne jours
+      const trJours = document.createElement("tr");
+      trJours.className = "days-row";
       for (let d = 1; d <= nbDays; d++) {
         const th = document.createElement("th");
-        const dateObj = new Date(year, monthIndex, d);
-        th.textContent = getDayName(dateObj);
-        th.setAttribute("data-day", d);
+        const dateISO = `${year}-${String(monthIndex + 1).padStart(
+          2,
+          "0"
+        )}-${String(d).padStart(2, "0")}`;
+        const dayObj = new Date(year, monthIndex, d);
 
-        const iso = getIsoDate(year, monthIndex, d);
-        if (isWeekend(dateObj)) th.classList.add("weekend");
-        if (isHoliday(iso)) th.classList.add("holiday");
+        th.textContent = dayObj.toLocaleDateString("fr-FR", {
+          weekday: "short"
+        });
 
-        trDays.appendChild(th);
+        if (dayObj.getDay() === 0 || dayObj.getDay() === 6)
+          th.classList.add("weekend");
+        if (HOLIDAYS.has(dateISO)) th.classList.add("holiday");
+
+        trJours.appendChild(th);
       }
-      planningTable.appendChild(trDays);
+      table.appendChild(trJours);
 
-      // ---- LIGNES AGENTS ----
-      const visibleAgents = agents.filter(a => a.visible);
-      visibleAgents.sort((a,b) => a.name.localeCompare(b.name));
+      // Ligne vide
+      const trVide = document.createElement("tr");
+      trVide.className = "empty-row";
+      for (let d = 1; d <= nbDays; d++) {
+        trVide.appendChild(document.createElement("th"));
+      }
+      table.appendChild(trVide);
 
-      visibleAgents.forEach(function(ag) {
+      // Lignes agents visibles
+      AGENTS.forEach(agent => {
+        const visible = agentVisible[agent];
+        if (visible === false) return;
+
         const tr = document.createElement("tr");
 
         const tdName = document.createElement("td");
         tdName.className = "name-cell";
-        tdName.textContent = ag.name;
 
-        if (ag.team === 1) tdName.classList.add("team-1");
-        if (ag.team === 2) tdName.classList.add("team-2");
+        const team = teams[agent] || "";
+        if (team === "1") tdName.classList.add("team-1");
+        else if (team === "2") tdName.classList.add("team-2");
 
+        tdName.textContent = agent;
         tr.appendChild(tdName);
 
         for (let d = 1; d <= nbDays; d++) {
           const td = document.createElement("td");
-          td.setAttribute("data-day", d);
-          td.setAttribute("data-agent", ag.name);
+          const dateISO = `${year}-${String(monthIndex + 1).padStart(
+            2,
+            "0"
+          )}-${String(d).padStart(2, "0")}`;
+          const dayObj = new Date(year, monthIndex, d);
 
-          const sel = document.createElement("select");
-          // options
-          for (const key in GUARD_TYPES) {
-            if (!Object.prototype.hasOwnProperty.call(GUARD_TYPES, key)) continue;
-            const opt = document.createElement("option");
-            opt.value = key;
-            opt.textContent = GUARD_TYPES[key].label;
-            sel.appendChild(opt);
-          }
+          if (dayObj.getDay() === 0 || dayObj.getDay() === 6)
+            td.classList.add("weekend");
+          if (HOLIDAYS.has(dateISO)) td.classList.add("holiday");
 
-          const iso = getIsoDate(year, monthIndex, d);
-          const storageKey = iso + "|" + ag.name;
-          if (planningData[storageKey]) {
-            sel.value = planningData[storageKey];
-            applyGuardStyle(td, planningData[storageKey]);
-          }
-
-          sel.addEventListener("change", function() {
-            const value = this.value;
-            const k = storageKey;
-            if (value === "") {
-              delete planningData[k];
-            } else {
-              planningData[k] = value;
-            }
-            applyGuardStyle(td, value);
-            saveAll();
+          const select = document.createElement("select");
+          CHOIX.forEach(opt => {
+            const o = document.createElement("option");
+            o.value = opt;
+            o.textContent = opt;
+            select.appendChild(o);
           });
 
-          td.appendChild(sel);
+          if (!data[currentMonthId][dateISO])
+            data[currentMonthId][dateISO] = {};
+          if (!data[currentMonthId][dateISO][agent])
+            data[currentMonthId][dateISO][agent] = "";
+
+          select.value = data[currentMonthId][dateISO][agent];
+          applyCellStyle(select.value, td, select);
+
+          select.addEventListener("change", () => {
+            const oldValue = data[currentMonthId][dateISO][agent];
+            const newValue = select.value;
+            if (newValue === oldValue) return;
+
+            const permMsg = checkCanEdit(agent);
+            if (permMsg) {
+              alert(permMsg);
+              select.value = oldValue;
+              return;
+            }
+
+            const reason = getImpossibleReason(
+              currentMonthId,
+              dateISO,
+              agent,
+              oldValue,
+              newValue
+            );
+            if (reason) {
+              alert(reason);
+              select.value = oldValue;
+              return;
+            }
+
+            data[currentMonthId][dateISO][agent] = newValue;
+            applyCellStyle(newValue, td, select);
+            saveData();
+            updateDayHeaders();
+          });
+
+          td.appendChild(select);
           tr.appendChild(td);
         }
 
-        planningTable.appendChild(tr);
+        table.appendChild(tr);
       });
 
-      // appliquer les interdictions sur ce mois
-      applyInterdictionsToPlanning();
+      updateDayHeaders();
+      applyInterdictionStyles();
+      if (currentMode === "admin") buildParametresTables();
     }
 
-    function applyGuardStyle(td, guardKey) {
-      const info = GUARD_TYPES[guardKey];
-      td.style.background = info && info.bg ? info.bg : "#ffffff";
-      td.style.color = info && info.color ? info.color : "#000000";
+    /* ==============================
+       BADGE D'ÉQUIPE
+       ============================== */
+    function updateTeamBadge() {
+      const badge = document.getElementById("team-badge");
+      if (!badge) return;
+
+      if (!currentAgent) {
+        badge.style.display = "none";
+        return;
+      }
+
+      const t = teams[currentAgent] || "";
+      let text = "";
+      let bg = "";
+      let color = "#000";
+
+      if (t === "1") {
+        text = "ÉQUIPE 1";
+        bg = "#9dc3e6";
+      } else if (t === "2") {
+        text = "ÉQUIPE 2";
+        bg = "#ffe699";
+      } else {
+        text = "AUCUNE ÉQUIPE";
+        bg = "#e0e0e0";
+      }
+
+      badge.textContent = text;
+      badge.style.backgroundColor = bg;
+      badge.style.color = color;
+      badge.style.display = "inline-block";
     }
 
-    /* ==========================
-       INTERDICTIONS
-    =========================== */
+    /* ==============================
+       CONNEXION AGENT
+       ============================== */
+    function askAgentPassword(agent) {
+      const pwd = prompt("Mot de passe pour " + agent + " :");
+      if (pwd === null) return false;
+      if (pwd === agentPasswords[agent]) {
+        currentAgent = agent;
+        document.getElementById("btn-change-pwd").style.display =
+          "inline-block";
+        updateTeamBadge();
+        return true;
+      }
+      alert("Mot de passe incorrect.");
+      return false;
+    }
 
-    function refreshInterdictionTable() {
-      const tbl = document.getElementById("table-interdictions");
-      tbl.innerHTML = "";
-      const header = document.createElement("tr");
-      header.innerHTML =
-        "<th>Date</th><th>Équipe</th><th>Type</th><th>Note</th><th class='col-centered'>X</th>";
-      tbl.appendChild(header);
+    /* ==============================
+       MODES AGENT / ADMIN
+       ============================== */
+    function setModeAgent() {
+      currentMode = "agent";
+      currentAgent = "";
+      document.getElementById("btn-mode-agent").classList.add("active");
+      document.getElementById("btn-mode-admin").classList.remove("active");
 
-      interdictions.forEach(function(inter, index) {
+      document.getElementById("parametres-panel").style.display = "none";
+      document.getElementById("btn-change-admin-pwd").style.display = "none";
+      document.getElementById("btn-change-pwd").style.display = "none";
+      document.getElementById("block-agent-select").style.display =
+        "inline-block";
+      document.getElementById("admin-tabs").style.display = "none";
+
+      const selAgent = document.getElementById("current-agent-select");
+      selAgent.value = "";
+      updateTeamBadge();
+
+      buildMonth(currentYear, currentMonthIndex);
+    }
+
+    function setModeAdmin() {
+      const pwd = prompt("Mot de passe Administrateur :");
+      if (pwd !== adminPassword) {
+        alert("Mot de passe incorrect.");
+        return;
+      }
+
+      currentMode = "admin";
+      currentAgent = "";
+
+      document.getElementById("btn-mode-agent").classList.remove("active");
+      document.getElementById("btn-mode-admin").classList.add("active");
+
+      document.getElementById("parametres-panel").style.display = "block";
+      document.getElementById("btn-change-admin-pwd").style.display =
+        "inline-block";
+      document.getElementById("btn-change-pwd").style.display = "none";
+
+      // en admin, tu m'as demandé de SUPPRIMER "Je suis : choisir agent"
+      document.getElementById("block-agent-select").style.display = "none";
+      document.getElementById("team-badge").style.display = "none";
+
+      // onglets admin visibles
+      document.getElementById("admin-tabs").style.display = "flex";
+      setAdminTab("agents");
+
+      const selAgent = document.getElementById("current-agent-select");
+      selAgent.value = "";
+      updateTeamBadge();
+
+      buildParametresTables();
+      buildMonth(currentYear, currentMonthIndex);
+    }
+
+    /* ==============================
+       PARAMÈTRES ADMIN : TABLES
+       ============================== */
+    function buildParametresTables() {
+      buildParamAgentsTable();
+      buildInterdictionsTable();
+    }
+
+    function buildParamAgentsTable() {
+      const table = document.getElementById("table-param-agents");
+      table.innerHTML = `
+        <tr>
+          <th>Agent</th>
+          <th>Afficher</th>
+          <th>Équipe</th>
+          <th>Quota (gardes)</th>
+          <th>Mot de passe provisoire</th>
+          <th>Réinitialiser mot de passe</th>
+        </tr>
+      `;
+
+      AGENTS.forEach(agent => {
         const tr = document.createElement("tr");
 
-        // Date
-        const tdDate = document.createElement("td");
-        const inputDate = document.createElement("input");
-        inputDate.type = "date";
-        inputDate.value = inter.date;
-        inputDate.dataset.index = index;
-        inputDate.addEventListener("change", function() {
-          const idx = parseInt(this.dataset.index, 10);
-          interdictions[idx].date = this.value;
-          saveAll();
-          buildPlanning();
+        // Nom
+        const tdName = document.createElement("td");
+        tdName.textContent = agent;
+        tr.appendChild(tdName);
+
+        // Visibilité
+        const tdVis = document.createElement("td");
+        const btnEye = document.createElement("button");
+        btnEye.className = "eye-btn";
+
+        function refreshEye() {
+          const visible = agentVisible[agent] !== false;
+          btnEye.textContent = visible ? "👁️" : "🙈";
+        }
+        refreshEye();
+
+        btnEye.addEventListener("click", () => {
+          const visible = agentVisible[agent] !== false;
+          agentVisible[agent] = !visible;
+          saveAgentVisible();
+          refreshEye();
+          buildMonth(currentYear, currentMonthIndex);
         });
-        tdDate.appendChild(inputDate);
+
+        tdVis.appendChild(btnEye);
+        tr.appendChild(tdVis);
+
+        // Équipe
+        const tdTeam = document.createElement("td");
+        const selTeam = document.createElement("select");
+        ["", "1", "2"].forEach(v => {
+          const o = document.createElement("option");
+          o.value = v;
+          o.textContent = v ? "Équipe " + v : "--";
+          selTeam.appendChild(o);
+        });
+        selTeam.value = teams[agent] || "";
+        selTeam.addEventListener("change", () => {
+          teams[agent] = selTeam.value;
+          saveTeams();
+          buildMonth(currentYear, currentMonthIndex);
+          if (agent === currentAgent) {
+            updateTeamBadge();
+          }
+        });
+        tdTeam.appendChild(selTeam);
+        tr.appendChild(tdTeam);
+
+        // Quota
+        const tdQuota = document.createElement("td");
+        const inpQuota = document.createElement("input");
+        inpQuota.type = "number";
+        inpQuota.min = "0";
+        inpQuota.step = "0.5";
+        inpQuota.value = quotas[agent] ?? 0;
+        inpQuota.className = "small-input";
+        inpQuota.addEventListener("change", () => {
+          quotas[agent] = parseFloat(inpQuota.value) || 0;
+          saveQuotas();
+        });
+        tdQuota.appendChild(inpQuota);
+        tr.appendChild(tdQuota);
+
+        // Mot de passe provisoire
+        const tdPwdDef = document.createElement("td");
+        const inpDef = document.createElement("input");
+        inpDef.type = "text";
+        inpDef.value = agentPasswordDefaults[agent] || "0000";
+        inpDef.className = "small-input";
+        inpDef.addEventListener("change", () => {
+          agentPasswordDefaults[agent] = inpDef.value || "0000";
+          savePasswords();
+        });
+        tdPwdDef.appendChild(inpDef);
+        tr.appendChild(tdPwdDef);
+
+        // Réinitialiser
+        const tdReset = document.createElement("td");
+        const btnReset = document.createElement("button");
+        btnReset.className = "btn";
+        btnReset.style.padding = "3px 6px";
+        btnReset.textContent = "Réinitialiser";
+        btnReset.addEventListener("click", () => {
+          agentPasswords[agent] = agentPasswordDefaults[agent] || "0000";
+          savePasswords();
+          alert("Mot de passe de " + agent + " réinitialisé.");
+        });
+        tdReset.appendChild(btnReset);
+        tr.appendChild(tdReset);
+
+        table.appendChild(tr);
+      });
+    }
+
+    function buildInterdictionsTable() {
+      const table = document.getElementById("table-interdictions");
+      table.innerHTML = `
+        <tr>
+          <th>Date</th>
+          <th>Équipe</th>
+          <th>Type</th>
+          <th>Note (si "Autre")</th>
+          <th>Supprimer</th>
+        </tr>
+      `;
+
+      interdictions.forEach((it, index) => {
+        const tr = document.createElement("tr");
+
+        // Date (input type="date" avec icône calendrier)
+        const tdDate = document.createElement("td");
+        const inpDate = document.createElement("input");
+        inpDate.type = "date";
+        inpDate.value = it.date || "";
+        inpDate.className = "small-input";
+        inpDate.addEventListener("change", () => {
+          if (!inpDate.value) {
+            alert("Date invalide.");
+            inpDate.value = it.date;
+            return;
+          }
+          it.date = inpDate.value;
+          saveInterdictions();
+          buildMonth(currentYear, currentMonthIndex);
+        });
+        tdDate.appendChild(inpDate);
         tr.appendChild(tdDate);
 
         // Équipe
         const tdTeam = document.createElement("td");
         const selTeam = document.createElement("select");
-        selTeam.dataset.index = index;
-        ["1","2","TOUS"].forEach(function(val) {
-          const opt = document.createElement("option");
-          opt.value = val;
-          opt.textContent = (val === "TOUS") ? "Toutes" : "Équipe " + val;
-          if (inter.team === val) opt.selected = true;
-          selTeam.appendChild(opt);
+        ["1", "2", "TOUS"].forEach(v => {
+          const o = document.createElement("option");
+          o.value = v;
+          o.textContent = v === "TOUS" ? "TOUS" : "Équipe " + v;
+          selTeam.appendChild(o);
         });
-        selTeam.addEventListener("change", function() {
-          const idx = parseInt(this.dataset.index, 10);
-          interdictions[idx].team = this.value;
-          saveAll();
-          buildPlanning();
+        selTeam.value = it.team;
+        selTeam.addEventListener("change", () => {
+          it.team = selTeam.value;
+          saveInterdictions();
+          buildMonth(currentYear, currentMonthIndex);
         });
         tdTeam.appendChild(selTeam);
         tr.appendChild(tdTeam);
@@ -645,311 +1321,56 @@
         // Type
         const tdType = document.createElement("td");
         const selType = document.createElement("select");
-        selType.dataset.index = index;
-        const types = [
-          {value:"E1", label:"Manœuvre équipe 1"},
-          {value:"E2", label:"Manœuvre équipe 2"},
-          {value:"COM", label:"Manœuvre commune"},
-          {value:"AUTRE", label:"Autre"}
-        ];
-        types.forEach(function(t) {
-          const opt = document.createElement("option");
-          opt.value = t.value;
-          opt.textContent = t.label;
-          if (inter.type === t.value) opt.selected = true;
-          selType.appendChild(opt);
+        [
+          { value: "EQ1", label: "Manœuvre Équipe 1" },
+          { value: "EQ2", label: "Manœuvre Équipe 2" },
+          { value: "COMMUNE", label: "Manœuvre Commune" },
+          { value: "AUTRE", label: "Autre" }
+        ].forEach(def => {
+          const o = document.createElement("option");
+          o.value = def.value;
+          o.textContent = def.label;
+          selType.appendChild(o);
         });
-        selType.addEventListener("change", function() {
-          const idx = parseInt(this.dataset.index, 10);
-          interdictions[idx].type = this.value;
-          saveAll();
-          buildPlanning();
+        selType.value = it.noteType || "EQ1";
+        selType.addEventListener("change", () => {
+          it.noteType = selType.value;
+          saveInterdictions();
+          refreshNoteVisibility();
+          buildMonth(currentYear, currentMonthIndex);
         });
         tdType.appendChild(selType);
         tr.appendChild(tdType);
 
-              // Note
+        // Note
         const tdNote = document.createElement("td");
-        const inputNote = document.createElement("input");
-        inputNote.type = "text";
-        inputNote.className = "full-input";
-        inputNote.value = inter.note || "";
-        inputNote.dataset.index = index;
-        inputNote.addEventListener("input", function() {
-          const idx = parseInt(this.dataset.index, 10);
-          interdictions[idx].note = this.value;
-          saveAll();
+        const inpNote = document.createElement("input");
+        inpNote.type = "text";
+        inpNote.value = it.customNote || "";
+        inpNote.className = "full-input";
+
+        function refreshNoteVisibility() {
+          inpNote.style.display =
+            selType.value === "AUTRE" ? "inline-block" : "none";
+        }
+        refreshNoteVisibility();
+
+        inpNote.addEventListener("change", () => {
+          it.customNote = inpNote.value;
+          saveInterdictions();
         });
-        tdNote.appendChild(inputNote);
+
+        tdNote.appendChild(inpNote);
         tr.appendChild(tdNote);
 
-        // Suppr
+        // Supprimer
         const tdDel = document.createElement("td");
-        tdDel.className = "col-centered";
         const btnDel = document.createElement("button");
+        btnDel.className = "btn";
+        btnDel.style.padding = "3px 6px";
         btnDel.textContent = "X";
-        btnDel.dataset.index = index;
-        btnDel.addEventListener("click", function() {
-          const idx = parseInt(this.dataset.index, 10);
-          interdictions.splice(idx, 1);
-          saveAll();
-          refreshInterdictionTable();
-          buildPlanning();
-        });
-        tdDel.appendChild(btnDel);
-        tr.appendChild(tdDel);
+        btnDel.addEventListener("click", () => {
+          interdictions.splice(index, 1);
+          saveInterdictions();
+          buildInterdictionsTable();
 
-        tbl.appendChild(tr);
-      });
-    }
-
-    function applyInterdictionsToPlanning() {
-      const monthIndex = parseInt(selectMonth.value, 10);
-      const year = parseInt(selectYear.value, 10);
-
-      // Réinitialiser classes d'interdiction
-      const cells = planningTable.querySelectorAll("[data-day]");
-      cells.forEach(function(c) {
-        c.classList.remove("interd-team1","interd-team2","interd-all");
-      });
-
-      interdictions.forEach(function(inter) {
-        if (!inter.date) return;
-        const dObj = new Date(inter.date);
-        if (dObj.getFullYear() !== year || dObj.getMonth() !== monthIndex) return;
-
-        const day = dObj.getDate();
-        const selector = '[data-day="' + day + '"]';
-        const colCells = planningTable.querySelectorAll(selector);
-
-        let cls;
-        if (inter.team === "1") cls = "interd-team1";
-        else if (inter.team === "2") cls = "interd-team2";
-        else cls = "interd-all";
-
-        colCells.forEach(function(c) {
-          c.classList.add(cls);
-        });
-      });
-    }
-
-    document.getElementById("btn-add-interdiction").addEventListener("click", function() {
-      const monthIndex = parseInt(selectMonth.value, 10);
-      const year = parseInt(selectYear.value, 10);
-      const dateStr = getIsoDate(year, monthIndex, 1);
-      interdictions.push({date:dateStr, team:"1", type:"E1", note:""});
-      saveAll();
-      refreshInterdictionTable();
-      buildPlanning();
-    });
-
-    /* ==========================
-       PARAMÈTRES : AGENTS
-    =========================== */
-    function refreshParamAgents() {
-      const table = document.getElementById("table-param-agents");
-      table.innerHTML = "";
-      const header = document.createElement("tr");
-      header.innerHTML =
-        "<th>Agent</th><th class='col-centered'>Aff.</th><th class='col-centered'>Éq.</th>" +
-        "<th class='col-centered'>Quota</th><th class='col-centered'>Pwd provisoire</th><th class='col-centered'>X</th>";
-      table.appendChild(header);
-
-      agents.sort((a,b) => a.name.localeCompare(b.name));
-
-      agents.forEach(function(ag, index) {
-        const tr = document.createElement("tr");
-
-        // Nom
-        const tdName = document.createElement("td");
-        const inputName = document.createElement("input");
-        inputName.type = "text";
-        inputName.className = "full-input";
-        inputName.value = ag.name;
-        inputName.dataset.index = index;
-        inputName.dataset.field = "name";
-        tdName.appendChild(inputName);
-        tr.appendChild(tdName);
-
-        // Afficher
-        const tdVis = document.createElement("td");
-        tdVis.className = "col-centered";
-        const chk = document.createElement("input");
-        chk.type = "checkbox";
-        chk.checked = ag.visible;
-        chk.dataset.index = index;
-        chk.dataset.field = "visible";
-        tdVis.appendChild(chk);
-        tr.appendChild(tdVis);
-
-        // Équipe
-        const tdTeam = document.createElement("td");
-        tdTeam.className = "col-centered";
-        const selTeam = document.createElement("select");
-        selTeam.dataset.index = index;
-        selTeam.dataset.field = "team";
-        const optNone = document.createElement("option");
-        optNone.value = "0";
-        optNone.textContent = "-";
-        selTeam.appendChild(optNone);
-        const opt1 = document.createElement("option");
-        opt1.value = "1";
-        opt1.textContent = "1";
-        selTeam.appendChild(opt1);
-        const opt2 = document.createElement("option");
-        opt2.value = "2";
-        opt2.textContent = "2";
-        selTeam.appendChild(opt2);
-        selTeam.value = String(ag.team || 0);
-        tdTeam.appendChild(selTeam);
-        tr.appendChild(tdTeam);
-
-        // Quota
-        const tdQuota = document.createElement("td");
-        tdQuota.className = "col-centered";
-        const inputQuota = document.createElement("input");
-        inputQuota.type = "number";
-        inputQuota.className = "small-input";
-        inputQuota.min = "0";
-        inputQuota.value = ag.quota || 0;
-        inputQuota.dataset.index = index;
-        inputQuota.dataset.field = "quota";
-        tdQuota.appendChild(inputQuota);
-        tr.appendChild(tdQuota);
-
-        // Pwd provisoire
-        const tdPwd = document.createElement("td");
-        tdPwd.className = "col-centered";
-        const inputPwd = document.createElement("input");
-        inputPwd.type = "text";
-        inputPwd.className = "small-input";
-        inputPwd.value = ag.pwd || "";
-        inputPwd.dataset.index = index;
-        inputPwd.dataset.field = "pwd";
-        tdPwd.appendChild(inputPwd);
-        tr.appendChild(tdPwd);
-
-        // Suppr
-        const tdDel = document.createElement("td");
-        tdDel.className = "col-centered";
-        const btnDel = document.createElement("button");
-        btnDel.textContent = "X";
-        btnDel.dataset.index = index;
-        btnDel.addEventListener("click", function() {
-          const idx = parseInt(this.dataset.index, 10);
-          agents.splice(idx, 1);
-          saveAll();
-          refreshParamAgents();
-          refreshAgentSelect();
-          buildPlanning();
-        });
-        tdDel.appendChild(btnDel);
-        tr.appendChild(tdDel);
-
-        table.appendChild(tr);
-      });
-
-      // gestion des modifications (delegation)
-      table.oninput = function(e) {
-        const target = e.target;
-        const idx = parseInt(target.dataset.index || "-1", 10);
-        const field = target.dataset.field;
-        if (idx >= 0 && field) {
-          if (field === "quota") {
-            agents[idx][field] = parseInt(target.value || "0", 10);
-          } else {
-            agents[idx][field] = target.value;
-          }
-          saveAll();
-          refreshAgentSelect();
-          buildPlanning();
-        }
-      };
-
-      table.onchange = function(e) {
-        const target = e.target;
-        const idx = parseInt(target.dataset.index || "-1", 10);
-        const field = target.dataset.field;
-        if (idx >= 0 && field) {
-          if (field === "visible") {
-            agents[idx].visible = target.checked;
-          } else if (field === "team") {
-            agents[idx].team = parseInt(target.value || "0", 10);
-          }
-          saveAll();
-          refreshAgentSelect();
-          buildPlanning();
-        }
-      };
-    }
-
-    document.getElementById("btn-add-agent").addEventListener("click", function() {
-      agents.push({name:"Nouvel agent",visible:true,team:0,quota:1,pwd:"0000"});
-      saveAll();
-      refreshParamAgents();
-      refreshAgentSelect();
-      buildPlanning();
-    });
-
-    /* ==========================
-       MODE ADMIN / ONGLET
-    =========================== */
-    const btnModeAgent = document.getElementById("btn-mode-agent");
-    const btnModeAdmin = document.getElementById("btn-mode-admin");
-    const adminTabs = document.getElementById("admin-tabs");
-    const panelAdmin = document.getElementById("parametres-panel");
-    const panelAgents = document.getElementById("panel-agents");
-    const panelInterd = document.getElementById("panel-interdictions");
-    const btnTabAgents = document.getElementById("btn-admin-agents");
-    const btnTabInterd = document.getElementById("btn-admin-interd");
-
-    function setMode(isAdmin) {
-      btnModeAgent.classList.toggle("active", !isAdmin);
-      btnModeAdmin.classList.toggle("active", isAdmin);
-      adminTabs.style.display = isAdmin ? "flex" : "none";
-      panelAdmin.style.display = isAdmin ? "block" : "none";
-      document.getElementById("block-agent-select").style.display = isAdmin ? "none" : "inline-flex";
-    }
-
-    btnModeAdmin.addEventListener("click", function() {
-      const pwd = prompt("Mot de passe administrateur :");
-      if (pwd === adminPassword) {
-        setMode(true);
-        refreshParamAgents();
-        refreshInterdictionTable();
-      } else if (pwd !== null) {
-        alert("Mot de passe incorrect.");
-      }
-    });
-
-    btnModeAgent.addEventListener("click", function() {
-      setMode(false);
-    });
-
-    btnTabAgents.addEventListener("click", function() {
-      btnTabAgents.classList.add("active");
-      btnTabInterd.classList.remove("active");
-      panelAgents.style.display = "block";
-      panelInterd.style.display = "none";
-    });
-
-    btnTabInterd.addEventListener("click", function() {
-      btnTabAgents.classList.remove("active");
-      btnTabInterd.classList.add("active");
-      panelAgents.style.display = "none";
-      panelInterd.style.display = "block";
-      refreshInterdictionTable();
-    });
-
-    /* ==========================
-       INIT
-    =========================== */
-    initMonthYearSelectors();
-    refreshAgentSelect();
-    buildPlanning();
-
-    selectMonth.addEventListener("change", buildPlanning);
-    selectYear.addEventListener("change", buildPlanning);
-  </script>
-</body>
-</html>
