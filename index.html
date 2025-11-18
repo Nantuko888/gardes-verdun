@@ -1,1 +1,109 @@
+<!DOCTYPE html><html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>DEMANDES DE GARDES CS VERDUN</title>
+<style>
+body{margin:0;font-family:Arial;background:#f3f3f3;}
+#header{background:#0c1f45;color:#fff;text-align:center;padding:14px;font-size:1.7em;font-weight:bold;}
+#controls,#month-year{max-width:1200px;margin:10px auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:0 10px;}
+.btn{padding:6px 12px;border-radius:20px;border:1px solid #666;background:#fff;cursor:pointer;} .btn.active{background:#ffd659;}
+.wrapper{max-width:1200px;margin:0 auto;background:#fff;padding:8px;border-radius:8px;box-shadow:0 0 6px rgba(0,0,0,0.2);overflow:auto;}/* TABLE */ table{border-collapse:separate;border-spacing:0;min-width:2600px;table-layout:fixed;} th,td{border:1px solid #444;padding:4px;font-size:0.82em;white-space:nowrap;min-width:95px;text-align:center;}
+
+/* STICKY LEFT */ .name-header,.name-cell{position:sticky;left:0;z-index:200;min-width:200px;} .name-header{background:rgb(246,64,77);color:#fff;} .name-cell{background:#e0e0e0;text-align:left;padding-left:8px;box-shadow:4px 0 4px rgba(0,0,0,0.25);}
+
+/* STICKY TOP */ .weeks-row th{position:sticky;top:0;background:#fff;z-index:150;} .dates-row th{position:sticky;top:28px;background:#fff;z-index:150;} .days-row th{position:sticky;top:56px;background:#fff;z-index:150;}
+
+/* WEEKEND / HOLIDAY */ .weekend{background:#dbe6ff!important;} .holiday{background:#c8f2c8!important;}
+
+/* ADMIN PANEL */ #parametres-panel{max-width:900px;margin:20px auto;padding:10px;background:#fff;border-radius:8px;display:none;box-shadow:0 0 6px rgba(0,0,0,0.2);} .table-admin{width:100%;border-collapse:collapse;} .table-admin th,.table-admin td{border:1px solid #ccc;padding:4px;font-size:0.8em;} .small-input{width:60px;} .full-input{width:100%;} </style>
+
+</head>
+<body><div id="header">DEMANDES DE GARDES CS VERDUN</div><div id="controls">
+  <button id="btn-mode-agent" class="btn active">Agent</button>
+  <button id="btn-mode-admin" class="btn">Administrateur</button>
+  <div id="admin-tabs" style="display:none;gap:6px;">
+    <button id="btn-admin-agents" class="btn active">Agents</button>
+    <button id="btn-admin-interd" class="btn">Interdictions</button>
+  </div>
+  <span id="block-agent-select">Je suis : <select id="current-agent-select"></select></span>
+  <span id="team-badge" style="display:none;"></span>
+</div><div id="month-year">
+  <span>Mois :</span><select id="select-month"></select>
+  <span>Année :</span><select id="select-year"></select>
+</div><div class="wrapper"><table id="planning"></table></div><div id="parametres-panel">
+  <h3>Paramètres administrateur</h3>
+  <div id="panel-agents">
+    <table id="table-param-agents" class="table-admin">
+      <tr><th>Agent</th><th>Aff.</th><th>Équipe</th><th>Quota</th><th>Pwd</th><th>X</th></tr>
+    </table>
+    <button id="btn-add-agent" class="btn">+ Agent</button>
+  </div>
+  <div id="panel-interdictions" style="display:none;">
+    <table id="table-interdictions" class="table-admin">
+      <tr><th>Date</th><th>Équipe</th><th>Type</th><th>Note</th><th>X</th></tr>
+    </table>
+    <button id="btn-add-interdiction" class="btn">+ Interdiction</button>
+  </div>
+</div><script>
+/* CORE DATA */
+let agents=[
+ {name:"BAMME M",visible:true,team:1,quota:2,pwd:"1111"},
+ {name:"BAROTTE C",visible:true,team:2,quota:2,pwd:"1111"},
+ {name:"BAUR B",visible:true,team:1,quota:2,pwd:"1111"},
+ {name:"CHRISTAL E",visible:true,team:1,quota:2,pwd:"1111"},
+ {name:"CHRISTAL M",visible:true,team:1,quota:2,pwd:"1111"},
+ {name:"GAFFARD R",visible:true,team:1,quota:2,pwd:"1111"},
+ {name:"JOSEPH J",visible:true,team:2,quota:2,pwd:"1111"},
+ {name:"LALEEUW F",visible:true,team:2,quota:2,pwd:"1111"},
+ {name:"MICHEL M",visible:true,team:2,quota:2,pwd:"1111"},
+ {name:"ROGIE F",visible:true,team:1,quota:2,pwd:"1111"},
+ {name:"SABOURET BAROTTE M",visible:true,team:2,quota:2,pwd:"1111"},
+ {name:"SENECHAL B",visible:true,team:2,quota:2,pwd:"1111"},
+ {name:"STELLATO V",visible:true,team:1,quota:2,pwd:"1111"},
+ {name:"TRONTIN C",visible:true,team:1,quota:2,pwd:"1111"},
+ {name:"VENANTE A",visible:true,team:2,quota:2,pwd:"1111"},
+ {name:"VENANTE P",visible:true,team:2,quota:2,pwd:"1111"},
+ {name:"WALLARIN H",visible:true,team:1,quota:2,pwd:"1111"}
+];
+let adminPassword="admin";
+
+/* SAVE / LOAD */
+function save(){localStorage.setItem("agents",JSON.stringify(agents));localStorage.setItem("admin",adminPassword);} 
+function load(){let a=localStorage.getItem("agents");if(a)agents=JSON.parse(a);let p=localStorage.getItem("admin");if(p)adminPassword=p;} load();
+
+/* AGENT SELECT */
+function refreshAgentSelect(){let s=document.getElementById("current-agent-select");s.innerHTML="";
+ agents.filter(a=>a.visible).sort((a,b)=>a.name.localeCompare(b.name)).forEach(a=>{
+   let o=document.createElement("option");o.value=a.name;o.textContent=a.name;s.appendChild(o);
+ });
+}
+refreshAgentSelect();
+
+/* BADGE */
+function updateBadge(n){let b=document.getElementById("team-badge");if(!n){b.style.display="none";return;} let a=agents.find(x=>x.name===n);
+ b.style.display="inline-block";
+ if(a.team==1){b.textContent="Équipe 1";b.style.background="#9dc3e6";} 
+ else if(a.team==2){b.textContent="Équipe 2";b.style.background="#ffe699";} 
+ else {b.textContent="-";b.style.background="#ddd";} }
+
+document.getElementById("current-agent-select").onchange=e=>updateBadge(e.target.value);
+
+/* MODE */
+function switchMode(a){
+ document.getElementById("btn-mode-agent").classList.toggle("active",!a);
+ document.getElementById("btn-mode-admin").classList.toggle("active",a);
+ document.getElementById("admin-tabs").style.display=a?"flex":"none";
+ document.getElementById("parametres-panel").style.display=a?"block":"none";
+ document.getElementById("block-agent-select").style.display=a?"none":"inline-flex";
+}
+
+document.getElementById("btn-mode-admin").onclick=()=>{let p=prompt("Mot de passe admin:");if(p===adminPassword){switchMode(true);refreshParamAgents();}else alert("Incorrect");};
+document.getElementById("btn-mode-agent").onclick=()=>switchMode(false);
+
+/* PANEL AGENTS */
+function refreshParamAgents(){let t=document.getElementById("table-param-agents");t.innerHTML='<tr><th>Agent</th><th>Aff.</th><th>Éq.</th><th>Quota</th><th>Pwd</th><th>X</th></tr>';
+ agents.sort((a,b)=>a.name.localeCompare(b.name)).forEach((ag,i)=>{
+   let r=document.createElement("tr");
+   r.innerHTML=`<td><input class='full-input' value='${ag.name}' data-i='${i}' data-f='name'></td>
+<td><input type='checkbox' ${ag.visible?
 
