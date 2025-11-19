@@ -188,133 +188,29 @@
       display: none;
       font-size: 0.85em;
     }
-/* panneau admin un peu plus étroit */
-#parametres-panel{
-  max-width:900px; /* tu peux mettre 700 ou 800 si tu veux encore plus étroit */
-  margin:5px auto;
-  padding:10px;
-  background:#fff;
-  border-radius:8px;
-  box-shadow:0 0 6px rgba(0,0,0,0.2);
-}
-
-/* le tableau n’est plus obligé de prendre 100% */
-.table-admin{
-  width:auto;
-  border-collapse:collapse;
-}
-
-/* colonnes plus compactes */
-.table-admin th,
-.table-admin td{
-  border:1px solid #ccc;
-  padding:4px;
-  font-size:0.8em;
-}
-
-/* ICI : largeur réelle de la colonne « Agent » */
-.full-input{
-  width:140px; /* teste 160 / 180 / 200 jusqu’à ce que ça te plaise */
-  max-width:140px;
-}
-
-/* ========= RÉDUCTION DES COLONNES PANNEAU ADMIN ========= */
-
-/* Largeur des colonnes dans Agents */
-#table-param-agents th:nth-child(1),
-#table-param-agents td:nth-child(1) {
-    width: 60px !important; /* Nom */
-}
-
-#table-param-agents th:nth-child(2),
-#table-param-agents td:nth-child(2) {
-    width: 60px !important; /* Afficher */
-    text-align: center;
-}
-
-#table-param-agents th:nth-child(3),
-#table-param-agents td:nth-child(3) {
-    width: 50px !important; /* Équipe */
-}
-
-#table-param-agents th:nth-child(4),
-#table-param-agents td:nth-child(4) {
-    width: 30px !important; /* Quota */
-}
-
-#table-param-agents th:nth-child(5),
-#table-param-agents td:nth-child(5) {
-    width: 80px !important; /* Mot de passe provisoire */
-}
-
-#table-param-agents th:nth-child(6),
-#table-param-agents td:nth-child(6) {
-    width: 70px !important; /* Actions */
-}
-
-
-/* ========= RÉDUCTION DES COLONNES INTERDICTIONS ========= */
-
-#table-interdictions th:nth-child(1),
-#table-interdictions td:nth-child(1) {
-    width: 120px !important; /* Date */
-}
-
-#table-interdictions th:nth-child(2),
-#table-interdictions td:nth-child(2) {
-    width: 80px !important; /* Équipe */
-}
-
-#table-interdictions th:nth-child(3),
-#table-interdictions td:nth-child(3) {
-    width: 150px !important; /* Type */
-}
-
-#table-interdictions th:nth-child(4),
-#table-interdictions td:nth-child(4) {
-    width: 150px !important; /* Note */
-}
-
-#table-interdictions th:nth-child(5),
-#table-interdictions td:nth-child(5) {
-    width: 60px !important; /* Supprimer */
-    text-align: center;
-}
-
-/* --------- RÉDUCTION DES COLONNES PANNEAU ADMIN --------- */
-
-/* Largeur des colonnes dans Agents */
-#table-param-agents th:nth-child(1),
-#table-param-agents td:nth-child(1) {
-    width: 30px !important; /* Nom / Agent */
-}
-
-#table-param-agents th:nth-child(2),
-#table-param-agents td:nth-child(2) {
-    width: 30px !important; /* Afficher */
-    text-align: center;
-}
-
-#table-param-agents th:nth-child(3),
-#table-param-agents td:nth-child(3) {
-    width: 40px !important; /* Équipe */
-}
-
-#table-param-agents th:nth-child(4),
-#table-param-agents td:nth-child(4) {
-    width: 40px !important; /* Quota */
-}
-
-#table-param-agents th:nth-child(5),
-#table-param-agents td:nth-child(5) {
-    width: 60px !important; /* Mot de passe provisoire */
-}
-
-#table-param-agents th:nth-child(6),
-#table-param-agents td:nth-child(6) {
-    width: 100px !important; /* Actions */
-}
-    
+    #parametres-panel h2 {
+      margin-top: 0;
+    }
+    .table-admin {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      table-layout: auto;
+    }
+    .table-admin th, .table-admin td {
+      border: 1px solid #ccc;
+      padding: 4px;
+      font-size: 0.8em;
+      text-align: left;
+    }
+    .small-input { width: 70px; }
+    .full-input { width: 100%; max-width: 220px; }
+    .eye-btn {
+      padding: 3px 6px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8em;
+    }
   </style>
 </head>
 <body>
