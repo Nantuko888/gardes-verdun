@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>DEMANDES DE GARDES CS VERDUN</title>
+  <title>DEMANDES DEu GARDES CS VERDUN</title>
   <style>
     /* ============= BASE ============= */
     * { box-sizing: border-box; }
@@ -153,33 +153,10 @@
     .weekend { background: #dbe6ff !important; }
     .holiday { background: #c8f2c8 !important; }
 
-    /* ============= INTERDICTIONS (fond colonne) ============= */
-    .interd-team1 { background: #9dc3e6 !important; }
-    .interd-team2 { background: #ffe699 !important; }
-    .interd-all { background: #f4b184 !important; }
-
-    /* ============= LIGNES STICKY EN PAYSAGE ============= */
-    @media (orientation: landscape) {
-      .weeks-row th:not(.name-header) {
-        position: sticky;
-        top: 0;
-        z-index: 80;
-      }
-      .dates-row th {
-        position: sticky;
-        top: 26px;
-        z-index: 70;
-      }
-      .days-row th {
-        position: sticky;
-        top: 52px;
-        z-index: 60;
-      }
-    }
-
     /* ============= PARAMÈTRES ADMIN ============= */
     #parametres-panel {
       max-width: 1200px; /* même largeur que le planning */
+      width: 100%;
       margin: 14px auto 20px auto;
       padding: 14px;
       background: #ffffff;
@@ -192,12 +169,11 @@
       margin-top: 0;
     }
 
-    /* TABLE ADMIN : 6 colonnes réparties sur 100% */
     .table-admin {
-      width: 50%;
+      width: 100%;
       border-collapse: collapse;
       margin-top: 8px;
-      table-layout: fixed; /* important pour respecter les pourcentages */
+      table-layout: fixed; /* on fige la largeur des colonnes */
     }
     .table-admin th,
     .table-admin td {
@@ -205,29 +181,31 @@
       padding: 4px;
       font-size: 0.8em;
       text-align: left;
+      white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
     }
 
-    /* Répartition des 6 colonnes sur 100% */
-    .table-admin th:nth-child(1),
-    .table-admin td:nth-child(1) { width: 30%; } /* Agent */
+    /* === Largeurs des 6 colonnes AGENTS sur 100% ===
+       Tu peux ajuster les % comme tu veux, tant que le total ≈ 100
+    */
+    #table-param-agents th:nth-child(1),
+    #table-param-agents td:nth-child(1) { width: 30%; } /* Agent */
 
-    .table-admin th:nth-child(2),
-    .table-admin td:nth-child(2) { width: 10%; } /* Afficher */
+    #table-param-agents th:nth-child(2),
+    #table-param-agents td:nth-child(2) { width: 8%; text-align: center; } /* Afficher */
 
-    .table-admin th:nth-child(3),
-    .table-admin td:nth-child(3) { width: 15%; } /* Équipe */
+    #table-param-agents th:nth-child(3),
+    #table-param-agents td:nth-child(3) { width: 17%; } /* Équipe */
 
-    .table-admin th:nth-child(4),
-    .table-admin td:nth-child(4) { width: 15%; } /* Quota */
+    #table-param-agents th:nth-child(4),
+    #table-param-agents td:nth-child(4) { width: 15%; } /* Quota */
 
-    .table-admin th:nth-child(5),
-    .table-admin td:nth-child(5) { width: 15%; } /* Mot de passe provisoire */
+    #table-param-agents th:nth-child(5),
+    #table-param-agents td:nth-child(5) { width: 15%; } /* Mot de passe provisoire */
 
-    .table-admin th:nth-child(6),
-    .table-admin td:nth-child(6) { width: 15%; } /* Actions */
+    #table-param-agents th:nth-child(6),
+    #table-param-agents td:nth-child(6) { width: 15%; } /* Actions */
 
     .small-input { width: 70px; }
     .full-input { width: 100%; max-width: 220px; }
@@ -357,13 +335,12 @@
       "1/2 G après-midi"
     ];
 
-    // Jours fériés exemple
     const HOLIDAYS = new Set([
       "2026-01-01"
     ]);
 
     /* ===============================
-       AGENTS (nom, équipe, quota, etc.)
+       AGENTS
        =============================== */
     let agents = [];
 
@@ -427,7 +404,6 @@
     /* ===============================
        DATA PLANNING
        =============================== */
-    // data[monthId][dateISO][agentId] = valeur
     let data = {};
 
     function loadData() {
@@ -453,7 +429,6 @@
     /* ===============================
        INTERDICTIONS
        =============================== */
-    // interdictions = [{date:"YYYY-MM-DD", team:"1"/"2"/"TOUS", type:"EQ1"/"EQ2"/"COMMUNE"/"AUTRE", note:""}]
     let interdictions = [];
 
     function loadInterdictions() {
@@ -494,11 +469,9 @@
       if (!its.length) return [];
       const team = agent.team || 0;
 
-      // Commune ou autre => bloque tout le monde
       const commune = its.filter(it => it.type === "COMMUNE" || it.type === "AUTRE");
       if (commune.length) return commune;
 
-      // Sinon, blocage par équipe ou TOUS
       return its.filter(it => it.team === "TOUS" || (team && it.team === String(team)));
     }
 
@@ -553,7 +526,7 @@
     let currentYear = YEARS[0];
     let currentMonthIndex = 0;
     let currentMonthKey = monthId(currentYear, currentMonthIndex);
-    let currentMode = "agent"; // "agent" ou "admin"
+    let currentMode = "agent";
     let currentAgentId = "";
 
     /* ===============================
@@ -573,7 +546,6 @@
       if (!data[monthKey][dateISO]) data[monthKey][dateISO] = {};
       const dayData = data[monthKey][dateISO];
 
-      // Interdictions
       if (newValue !== "") {
         const its = getInterdictionsForAgent(dateISO, ag);
         if (its.length) {
@@ -582,14 +554,12 @@
         }
       }
 
-      // 24h déjà posé
       for (const otherId in dayData) {
         if (otherId !== agentId && dayData[otherId] === "Garde 24" && newValue !== "") {
           return "Ce créneau est impossible. Déjà un agent en place.";
         }
       }
 
-      // On veut poser 24h alors qu'il y a déjà quelque chose
       if (newValue === "Garde 24") {
         for (const otherId in dayData) {
           if (otherId !== agentId && dayData[otherId] !== "") {
@@ -598,7 +568,6 @@
         }
       }
 
-      // Incompatibilités entre agents
       for (const otherId in dayData) {
         if (otherId === agentId) continue;
         const val = dayData[otherId];
@@ -613,7 +582,6 @@
         if (newValue === "1/2 G après-midi" && val === "1/2 G après-midi")
           return "Ce créneau est impossible. Déjà un agent en place.";
 
-        // 12J avec demi-journées
         if (newValue === "Garde 12 J" &&
             (val === "1/2 G matin" || val === "1/2 G après-midi"))
           return "Ce créneau est impossible. Déjà un agent en place.";
@@ -622,7 +590,6 @@
           return "Ce créneau est impossible. Déjà un agent en place.";
       }
 
-      // Quota
       const quota = ag.quota || 0;
       const total = totalGardes(agentId, monthKey);
       const ancien = gardeValue(oldValue);
@@ -675,63 +642,6 @@
     }
 
     /* ===============================
-       MISE À JOUR EN-TÊTES JOURS
-       =============================== */
-    function updateDayHeaders() {
-      const table = document.getElementById("planning");
-      const rowDates = table.querySelector("tr.dates-row");
-      if (!rowDates) return;
-      const ths = rowDates.querySelectorAll("th[data-date]");
-      ths.forEach(th => {
-        const dateISO = th.getAttribute("data-date");
-        const obj = (data[currentMonthKey] && data[currentMonthKey][dateISO]) || {};
-        let has = false;
-        for (const k in obj) {
-          if (obj[k]) { has = true; break; }
-        }
-        th.style.color = has ? "red" : "black";
-      });
-    }
-
-    /* ===============================
-       COLORATION DES INTERDICTIONS
-       =============================== */
-    function applyInterdictionStyles() {
-      const table = document.getElementById("planning");
-      const datesRow = table.querySelector("tr.dates-row");
-      const daysRow = table.querySelector("tr.days-row");
-      const emptyRow = table.querySelector("tr.empty-row");
-      if (!datesRow || !daysRow || !emptyRow) return;
-
-      const dateHeaders = Array.from(datesRow.querySelectorAll("th[data-date]"));
-      const rows = table.rows;
-
-      dateHeaders.forEach((th, idx) => {
-        const dateISO = th.getAttribute("data-date");
-        const cls = getInterdictionColorForDate(dateISO);
-        if (!cls) return;
-
-        // dates
-        th.classList.add(cls);
-        // jours
-        const dayCell = daysRow.cells[idx+1];
-        if (dayCell) dayCell.classList.add(cls);
-        // ligne vide
-        const eCell = emptyRow.cells[idx+1];
-        if (eCell) eCell.classList.add(cls);
-        // lignes agents
-        for (let r = 4; r < rows.length; r++) {
-          const row = rows[r];
-          const cell = row.cells[idx+1];
-          if (!cell) continue;
-          const sel = cell.querySelector("select");
-          if (sel && sel.value) continue; // laisser la couleur de garde si occupé
-          cell.classList.add(cls);
-        }
-      });
-    }
-
-    /* ===============================
        CONSTRUCTION DU MOIS
        =============================== */
     function buildMonth(year, monthIndex) {
@@ -745,14 +655,12 @@
 
       const nbDays = new Date(year, monthIndex+1, 0).getDate();
 
-      // Pré-calcul semaines
       const weekNumbers = [];
       for (let d = 1; d <= nbDays; d++) {
         const dt = new Date(year, monthIndex, d);
         weekNumbers.push(getISOWeek(dt));
       }
 
-      // LIGNE SEMAINES + CELLULE AGENTS
       const trWeeks = document.createElement("tr");
       trWeeks.className = "weeks-row";
 
@@ -775,7 +683,6 @@
       }
       table.appendChild(trWeeks);
 
-      // LIGNE DATES (numéros)
       const trDates = document.createElement("tr");
       trDates.className = "dates-row";
       for (let d = 1; d <= nbDays; d++) {
@@ -790,7 +697,6 @@
       }
       table.appendChild(trDates);
 
-      // LIGNE JOURS (lun, mar, ...)
       const trDays = document.createElement("tr");
       trDays.className = "days-row";
       for (let d = 1; d <= nbDays; d++) {
@@ -804,7 +710,6 @@
       }
       table.appendChild(trDays);
 
-      // LIGNE VIDE
       const trEmpty = document.createElement("tr");
       trEmpty.className = "empty-row";
       for (let d = 1; d <= nbDays; d++) {
@@ -812,7 +717,6 @@
       }
       table.appendChild(trEmpty);
 
-      // LIGNES AGENTS (uniquement visibles)
       const visibleAgents = agents
         .filter(a => a.visible)
         .slice()
@@ -872,7 +776,6 @@
             data[currentMonthKey][dateISO][agent.id] = newVal;
             applyCellStyle(newVal, td, select);
             saveData();
-            updateDayHeaders();
           });
 
           td.appendChild(select);
@@ -881,9 +784,6 @@
 
         table.appendChild(tr);
       });
-
-      updateDayHeaders();
-      applyInterdictionStyles();
     }
 
     /* ===============================
@@ -907,7 +807,6 @@
       sorted.forEach(ag => {
         const tr = document.createElement("tr");
 
-        // nom
         const tdName = document.createElement("td");
         const inpName = document.createElement("input");
         inpName.className = "full-input";
@@ -922,7 +821,6 @@
         tdName.appendChild(inpName);
         tr.appendChild(tdName);
 
-        // afficher
         const tdVisible = document.createElement("td");
         const chk = document.createElement("input");
         chk.type = "checkbox";
@@ -936,7 +834,6 @@
         tdVisible.appendChild(chk);
         tr.appendChild(tdVisible);
 
-        // équipe
         const tdTeam = document.createElement("td");
         const selTeam = document.createElement("select");
         ["0","1","2"].forEach(v=>{
@@ -955,7 +852,6 @@
         tdTeam.appendChild(selTeam);
         tr.appendChild(tdTeam);
 
-        // quota
         const tdQuota = document.createElement("td");
         const inpQuota = document.createElement("input");
         inpQuota.type = "number";
@@ -970,7 +866,6 @@
         tdQuota.appendChild(inpQuota);
         tr.appendChild(tdQuota);
 
-        // mdp provisoire
         const tdPwd = document.createElement("td");
         const inpPwd = document.createElement("input");
         inpPwd.type = "text";
@@ -983,7 +878,6 @@
         tdPwd.appendChild(inpPwd);
         tr.appendChild(tdPwd);
 
-        // actions
         const tdActions = document.createElement("td");
         const btnReset = document.createElement("button");
         btnReset.className = "eye-btn";
@@ -1013,7 +907,6 @@
       });
     }
 
-    /* Ajouter un agent */
     document.getElementById("btn-add-agent").addEventListener("click", () => {
       const id = "a" + Date.now();
       agents.push({
@@ -1049,7 +942,6 @@
       interdictions.forEach((it, idx) => {
         const tr = document.createElement("tr");
 
-        // Date
         const tdDate = document.createElement("td");
         const inpDate = document.createElement("input");
         inpDate.type = "date";
@@ -1068,7 +960,6 @@
         tdDate.appendChild(inpDate);
         tr.appendChild(tdDate);
 
-        // Équipe
         const tdTeam = document.createElement("td");
         const selTeam = document.createElement("select");
         ["1","2","TOUS"].forEach(v => {
@@ -1086,7 +977,6 @@
         tdTeam.appendChild(selTeam);
         tr.appendChild(tdTeam);
 
-        // Type
         const tdType = document.createElement("td");
         const selType = document.createElement("select");
         const types = [
@@ -1111,7 +1001,6 @@
         tdType.appendChild(selType);
         tr.appendChild(tdType);
 
-        // Note
         const tdNote = document.createElement("td");
         const inpNote = document.createElement("input");
         inpNote.type = "text";
@@ -1128,7 +1017,6 @@
         tdNote.appendChild(inpNote);
         tr.appendChild(tdNote);
 
-        // Supprimer
         const tdDel = document.createElement("td");
         const btnDel = document.createElement("button");
         btnDel.className = "eye-btn";
@@ -1168,7 +1056,6 @@
         sel.appendChild(o);
       });
 
-      // garder selection si possible
       if (currentAgentId) {
         const ag = getAgentById(currentAgentId);
         if (ag && ag.visible) {
@@ -1235,7 +1122,6 @@
       updateTeamBadge();
     });
 
-    /* Changer mot de passe agent */
     document.getElementById("btn-change-pwd").addEventListener("click", () => {
       if (!currentAgentId) {
         alert("Connectez-vous d'abord.");
@@ -1304,7 +1190,6 @@
     document.getElementById("btn-mode-agent").addEventListener("click", setModeAgent);
     document.getElementById("btn-mode-admin").addEventListener("click", setModeAdmin);
 
-    /* Changer mot de passe admin */
     document.getElementById("btn-change-admin-pwd").addEventListener("click", () => {
       const old = prompt("Ancien mot de passe administrateur :");
       if (old === null) return;
