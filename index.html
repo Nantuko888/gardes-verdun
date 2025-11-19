@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>DEMANDES DEu GARDES CS VERDUN</title>
+  <title>DEMANDES DE GARDES CS VERDUN</title>
   <style>
     /* ============= BASE ============= */
     * { box-sizing: border-box; }
@@ -177,96 +177,47 @@
       }
     }
 
-   /* ============= PARAMÈTRES ADMIN ============= */
-#parametres-panel {
-  max-width: 900px; /* largeur max du bloc */
-  margin: 14px auto 20px auto;
-  padding: 14px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 0 6px rgba(0,0,0,0.2);
-  display: none;
-  font-size: 0.85em;
-}
-
-#parametres-panel h2 {
-  margin-top: 0;
-}
-
-.table-admin {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 8px;
-  table-layout: fixed; /* important : on fixe les largeurs de colonnes */
-}
-/* largeur des colonnes AGENTS (6 colonnes) */
-#table-param-agents th:nth-child(1),
-#table-param-agents td:nth-child(1) { /* Agent */
-  width: 18%;
-}
-#table-param-agents th:nth-child(2),
-#table-param-agents td:nth-child(2) { /* Afficher */
-  width: 6%;
-}
-#table-param-agents th:nth-child(3),
-#table-param-agents td:nth-child(3) { /* Équipe */
-  width: 13%;
-}
-#table-param-agents th:nth-child(4),
-#table-param-agents td:nth-child(4) { /* Quota */
-  width: 18%;
-}
-#table-param-agents th:nth-child(5),
-#table-param-agents td:nth-child(5) { /* Mot de passe provisoire */
-  width: 15%;
-}
-#table-param-agents th:nth-child(6),
-#table-param-agents td:nth-child(6) { /* Actions */
-  width: 10%;
-}
-.table-admin th,
-.table-admin td {
-  border: 1px solid #ccc;
-  padding: 4px;
-  font-size: 0.8em;
-  text-align: left;
-}
-
-
-
-/* largeur des colonnes INTERDICTIONS (5 colonnes) */
-#table-interdictions th:nth-child(1),
-#table-interdictions td:nth-child(1) { /* Date */
-  width: 18%;
-}
-#table-interdictions th:nth-child(2),
-#table-interdictions td:nth-child(2) { /* Équipe */
-  width: 14%;
-}
-#table-interdictions th:nth-child(3),
-#table-interdictions td:nth-child(3) { /* Type */
-  width: 22%;
-}
-#table-interdictions th:nth-child(4),
-#table-interdictions td:nth-child(4) { /* Note */
-  width: 32%;
-}
-#table-interdictions th:nth-child(5),
-#table-interdictions td:nth-child(5) { /* Supprimer */
-  width: 14%;
-}
-
-.small-input { width: 70px; }
-.full-input { width: 100%; max-width: 220px; }
-
-.eye-btn {
-  padding: 3px 6px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.8em;
-}
-
+    /* ============= PARAMÈTRES ADMIN ============= */
+    #parametres-panel {
+      max-width: 900px; /* plus compact */
+      margin: 14px auto 20px auto;
+      padding: 14px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.2);
+      display: none;
+      font-size: 0.85em;
     }
+    #parametres-panel h2 {
+      margin-top: 0;
+    }
+    .table-admin {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      table-layout: fixed; /* IMPORTANT : pour que les pourcentages de colonnes soient respectés */
+    }
+    .table-admin th, .table-admin td {
+      border: 1px solid #ccc;
+      padding: 4px;
+      font-size: 0.8em;
+      text-align: left;
+    }
+
+    /* === LARGEURS DES 6 COLONNES ADMIN (Agent / Afficher / Équipe / Quota / MDP / Actions) === */
+    .table-admin th:nth-child(1),
+    .table-admin td:nth-child(1) { width: 35%; }  /* Agent */
+    .table-admin th:nth-child(2),
+    .table-admin td:nth-child(2) { width: 8%; }   /* Afficher */
+    .table-admin th:nth-child(3),
+    .table-admin td:nth-child(3) { width: 12%; }  /* Équipe */
+    .table-admin th:nth-child(4),
+    .table-admin td:nth-child(4) { width: 12%; }  /* Quota */
+    .table-admin th:nth-child(5),
+    .table-admin td:nth-child(5) { width: 18%; }  /* Mot de passe provisoire */
+    .table-admin th:nth-child(6),
+    .table-admin td:nth-child(6) { width: 15%; }  /* Actions */
+
     .small-input { width: 70px; }
     .full-input { width: 100%; max-width: 220px; }
     .eye-btn {
