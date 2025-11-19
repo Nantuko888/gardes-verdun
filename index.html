@@ -217,6 +217,70 @@
   width:100px; /* teste 160 / 180 / 200 jusqu’à ce que ça te plaise */
   max-width:140px;
 }
+
+/* ========= RÉDUCTION DES COLONNES PANNEAU ADMIN ========= */
+
+/* Largeur des colonnes dans Agents */
+#table-param-agents th:nth-child(1),
+#table-param-agents td:nth-child(1) {
+    width: 160px !important; /* Nom */
+}
+
+#table-param-agents th:nth-child(2),
+#table-param-agents td:nth-child(2) {
+    width: 60px !important; /* Afficher */
+    text-align: center;
+}
+
+#table-param-agents th:nth-child(3),
+#table-param-agents td:nth-child(3) {
+    width: 80px !important; /* Équipe */
+}
+
+#table-param-agents th:nth-child(4),
+#table-param-agents td:nth-child(4) {
+    width: 60px !important; /* Quota */
+}
+
+#table-param-agents th:nth-child(5),
+#table-param-agents td:nth-child(5) {
+    width: 120px !important; /* Mot de passe provisoire */
+}
+
+#table-param-agents th:nth-child(6),
+#table-param-agents td:nth-child(6) {
+    width: 100px !important; /* Actions */
+}
+
+
+/* ========= RÉDUCTION DES COLONNES INTERDICTIONS ========= */
+
+#table-interdictions th:nth-child(1),
+#table-interdictions td:nth-child(1) {
+    width: 120px !important; /* Date */
+}
+
+#table-interdictions th:nth-child(2),
+#table-interdictions td:nth-child(2) {
+    width: 80px !important; /* Équipe */
+}
+
+#table-interdictions th:nth-child(3),
+#table-interdictions td:nth-child(3) {
+    width: 150px !important; /* Type */
+}
+
+#table-interdictions th:nth-child(4),
+#table-interdictions td:nth-child(4) {
+    width: 150px !important; /* Note */
+}
+
+#table-interdictions th:nth-child(5),
+#table-interdictions td:nth-child(5) {
+    width: 60px !important; /* Supprimer */
+    text-align: center;
+}
+  
   </style>
 </head>
 <body>
