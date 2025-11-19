@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>DEMANDES DEu GARDES CS VERDUN</title>
+  <title>DEMANDES DE GARDES CS VERDUN</title>
   <style>
     /* ============= BASE ============= */
     * { box-sizing: border-box; }
@@ -179,7 +179,7 @@
 
     /* ============= PARAMÈTRES ADMIN ============= */
     #parametres-panel {
-      max-width: 1200px; /* même largeur max que le planning */
+      max-width: 900px; /* plus compact */
       margin: 14px auto 20px auto;
       padding: 14px;
       background: #ffffff;
@@ -195,7 +195,7 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 8px;
-      table-layout: fixed;   /* IMPORTANT : permet de fixer les largeurs en % */
+      table-layout: auto;
     }
     .table-admin th, .table-admin td {
       border: 1px solid #ccc;
@@ -204,33 +204,24 @@
       text-align: left;
     }
 
-    /* Largeurs harmonisées des 6 colonnes AGENTS
-       (la somme fait 100%) */
-    #table-param-agents th:nth-child(1),
-    #table-param-agents td:nth-child(1) { /* Agent */
-      width: 15%;
-    }
-    #table-param-agents th:nth-child(2),
-    #table-param-agents td:nth-child(2) { /* Afficher */
-      width: 15%;
-      text-align: center;
-    }
-    #table-param-agents th:nth-child(3),
-    #table-param-agents td:nth-child(3) { /* Équipe */
-      width: 20%;
-    }
-    #table-param-agents th:nth-child(4),
-    #table-param-agents td:nth-child(4) { /* Quota */
-      width: 20%;
-    }
-    #table-param-agents th:nth-child(5),
-    #table-param-agents td:nth-child(5) { /* Mot de passe provisoire */
-      width: 18%;
-    }
-    #table-param-agents th:nth-child(6),
-    #table-param-agents td:nth-child(6) { /* Actions */
-      width: 12%;
-    }
+    /* Répartition des 6 colonnes sur 100% */
+    .table-admin th:nth-child(1),
+    .table-admin td:nth-child(1) { width: 30%; } /* Agent */
+
+    .table-admin th:nth-child(2),
+    .table-admin td:nth-child(2) { width: 10%; } /* Afficher */
+
+    .table-admin th:nth-child(3),
+    .table-admin td:nth-child(3) { width: 15%; } /* Équipe */
+
+    .table-admin th:nth-child(4),
+    .table-admin td:nth-child(4) { width: 15%; } /* Quota */
+
+    .table-admin th:nth-child(5),
+    .table-admin td:nth-child(5) { width: 15%; } /* Mot de passe provisoire */
+
+    .table-admin th:nth-child(6),
+    .table-admin td:nth-child(6) { width: 15%; } /* Actions */
 
     .small-input { width: 70px; }
     .full-input { width: 100%; max-width: 220px; }
