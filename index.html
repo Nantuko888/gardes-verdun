@@ -177,9 +177,9 @@
       }
     }
 
- /* ============= PARAMÈTRES ADMIN ============= */
+/* ============= PARAMÈTRES ADMIN ============= */
 #parametres-panel {
-  max-width: 1200px; /* même largeur que le planning */
+  max-width: 1200px;
   margin: 14px auto 20px auto;
   padding: 14px;
   background: #ffffff;
@@ -192,7 +192,6 @@
   margin-top: 0;
 }
 
-/* tableau admin en pleine largeur du panneau */
 .table-admin {
   width: 100%;
   border-collapse: collapse;
@@ -212,25 +211,32 @@
 
 /* Largeurs des 6 colonnes du tableau "Agents" */
 #table-param-agents th:nth-child(1),
-#table-param-agents td:nth-child(1) { width: 35%; } /* Agent */
+#table-param-agents td:nth-child(1) { width: 35%; }
 
 #table-param-agents th:nth-child(2),
-#table-param-agents td:nth-child(2) { width: 8%; } /* Afficher */
+#table-param-agents td:nth-child(2) { width: 8%; }
 
-#table-param-agets th:nth-child(3),
-#table-param-agents td:nth-child(3) { width: 15%; } /* Équipe */
+#table-param-agents th:nth-child(3),
+#table-param-agents td:nth-child(3) { width: 15%; }
 
 #table-param-agents th:nth-child(4),
-#table-param-agents td:nth-child(4) { width: 10%; } /* Quota */
+#table-param-agents td:nth-child(4) { width: 10%; }
 
 #table-param-agents th:nth-child(5),
-#table-param-agents td:nth-child(5) { width: 16%; } /* MDP provisoire */
+#table-param-agents td:nth-child(5) { width: 16%; }
 
 #table-param-agents th:nth-child(6),
-#table-param-agents td:nth-child(6) { width: 16%; } /* Actions */
+#table-param-agents td:nth-child(6) { width: 16%; }
 
 .small-input { width: 70px; }
 .full-input { width: 100%; max-width: 220px; }
+.eye-btn {
+  padding: 3px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8em;
+}
+
 .eye-btn {
   padding: 3px 6px;
   border-radius: 4px;
