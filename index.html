@@ -422,6 +422,40 @@
   margin-top: -4px;
 }
 
+/* ====== LÉGENDE (cachée par défaut) ====== */
+#legend-planning {
+  display: none;
+  max-width: 300px;
+  margin: 20px auto;
+  padding: 15px 18px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  font-size: 0.9em;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.legend-box {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  margin-right: 10px;
+  border: 1px solid #888;
+}
+
+/* Couleurs identiques au planning */
+.lg-24 { background: #ffd39b; }
+.lg-12j { background: #40e0d0; }
+.lg-12n { background: #d9d9d9; }
+.lg-matin { background: #e6ccff; }
+.lg-am { background: #006a4e; }
+.lg-weekend { background: #dbe6ff; }
+
     /* ===== Apparence panneau Infos Planning ===== */
 #infos-planning {
   max-width: 350px;
@@ -542,6 +576,39 @@
   display: inline-block;
   border: 1px solid #888;
 }
+/* ====== LÉGENDE (cachée par défaut) ====== */
+#legend-planning {
+  display: none;
+  max-width: 300px;
+  margin: 20px auto;
+  padding: 15px 18px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  font-size: 0.9em;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.legend-box {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  margin-right: 10px;
+  border: 1px solid #888;
+}
+
+/* Couleurs identiques au planning */
+.lg-24 { background: #ffd39b; }
+.lg-12j { background: #40e0d0; }
+.lg-12n { background: #d9d9d9; }
+.lg-matin { background: #e6ccff; }
+.lg-am { background: #006a4e; }
+.lg-weekend { background: #dbe6ff; }
 
   </style>
 </head>
@@ -1859,27 +1926,19 @@ const HOLIDAYS = new Set([
 
     document.getElementById("btn-infos").addEventListener("click", toggleInfosPlanning);
 
-    /* ===============================
-       INFOS PLANNING / LÉGENDE
-       =============================== */
-    (function() {
-      const btnInfos = document.getElementById("btn-infos");
-      const legendPanel = document.getElementById("legend-panel");
-      if (!btnInfos || !legendPanel) return;
+   /* ====== BOUTON INFOS / LÉGENDE ====== */
+function toggleLegend() {
+  const panel = document.getElementById("legend-planning");
+  if (!panel) return;
 
-      // caché au départ
-      legendPanel.style.display = "none";
+  panel.style.display =
+    (panel.style.display === "none" || panel.style.display === "")
+    ? "block"
+    : "none";
+}
 
-      btnInfos.addEventListener("click", () => {
-        if (legendPanel.style.display === "none" || legendPanel.style.display === "") {
-          legendPanel.style.display = "block";
-          btnInfos.classList.add("active");
-        } else {
-          legendPanel.style.display = "none";
-          btnInfos.classList.remove("active");
-        }
-      });
-    })();
+document.getElementById("btn-infos").addEventListener("click", toggleLegend);
+
 
     /* ===============================
        INIT GLOBAL
