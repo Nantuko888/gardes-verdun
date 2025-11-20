@@ -247,6 +247,30 @@
   cursor: pointer;
   font-size: 0.8em;
 }
+    /* ============= PANNEAU INFOS PLANNING ============= */
+    #infos-planning {
+      max-width: 1200px;
+      margin: 10px auto;
+      padding: 10px 12px;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 4px rgba(0,0,0,0.15);
+      font-size: 0.85em;
+      display: none; /* caché par défaut, on l'ouvre avec le bouton */
+    }
+    #infos-planning h3 {
+      margin: 0 0 8px 0;
+      font-size: 1em;
+      font-weight: bold;
+    }
+    #infos-planning ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+    #infos-planning li {
+      margin-bottom: 4px;
+    }
+
   </style>
 </head>
 <body>
@@ -300,6 +324,19 @@
     <table id="planning"></table>
   </div>
 
+  <!-- Panneau d'informations du planning (visible pour tous) -->
+  <div id="infos-planning">
+    <h3>Infos planning</h3>
+    <ul>
+      <li><strong>Garde 24</strong> : … (à compléter)</li>
+      <li><strong>Garde 12 J</strong> : …</li>
+      <li><strong>Garde 12 N</strong> : …</li>
+      <li><strong>1/2 G matin</strong> : …</li>
+      <li><strong>1/2 G après-midi</strong> : …</li>
+      <li><strong>Couleurs</strong> : week-end en bleu, fériés en vert, etc.</li>
+    </ul>
+  </div>
+    
   <div id="parametres-panel">
     <h2>⚙ Paramètres administrateur</h2>
 
@@ -1433,6 +1470,18 @@ const HOLIDAYS = new Set([
       selM.addEventListener("change", changeMonthYear);
       selY.addEventListener("change", changeMonthYear);
     }
+
+    /* ===============================
+       BOUTON INFOS PLANNING
+       =============================== */
+    function toggleInfosPlanning() {
+      const panel = document.getElementById("infos-planning");
+      if (!panel) return;
+      const isHidden = (panel.style.display === "" || panel.style.display === "none");
+      panel.style.display = isHidden ? "block" : "none";
+    }
+
+    document.getElementById("btn-infos").addEventListener("click", toggleInfosPlanning);
 
     /* ===============================
        INIT GLOBAL
