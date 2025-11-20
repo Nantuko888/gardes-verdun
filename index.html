@@ -663,29 +663,7 @@
     <table id="planning"></table>
   </div>
 
-  /* ===============================
-       INFOS PLANNING / LÉGENDE
-       =============================== */
-    (function() {
-      const btnInfos = document.getElementById("btn-infos");
-      const legendPanel = document.getElementById("legend-panel");
-      if (!btnInfos || !legendPanel) return;
-
-      // caché au départ
-      legendPanel.style.display = "none";
-
-      btnInfos.addEventListener("click", () => {
-        if (legendPanel.style.display === "none" || legendPanel.style.display === "") {
-          legendPanel.style.display = "block";
-          btnInfos.classList.add("active");
-        } else {
-          legendPanel.style.display = "none";
-          btnInfos.classList.remove("active");
-        }
-      });
-    })();
-
-  <!-- ===== LÉGENDE PLANNING ===== -->
+   <!-- ===== LÉGENDE PLANNING ===== -->
 <div id="legend-planning">
   <h3>Légende du planning</h3>
 
