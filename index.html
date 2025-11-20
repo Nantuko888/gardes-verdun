@@ -247,6 +247,54 @@
   cursor: pointer;
   font-size: 0.8em;
 }
+
+    /* ===== LÉGENDE PLANNING ===== */
+#infos-planning {
+  position: fixed; /* collé en bas à gauche de l'écran */
+  bottom: 20px;
+  left: 20px;
+  background: #ffffff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.25);
+  font-size: 0.85em;
+  max-width: 260px;
+  display: none; /* caché au départ */
+  z-index: 500;
+}
+#infos-planning h3 {
+  margin: 0 0 6px 0;
+  font-size: 1em;
+}
+#infos-planning h4 {
+  margin: 6px 0 4px 0;
+  font-size: 0.9em;
+}
+#infos-planning ul {
+  margin: 0 0 4px 18px;
+  padding: 0;
+}
+#infos-planning li {
+  margin-bottom: 2px;
+}
+
+/* petits carrés de couleur dans la légende */
+.legend-box {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #999;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+.legend-guard24 { background: #ffd39b; }
+.legend-guard12j { background: #40e0d0; }
+.legend-guard12n { background: #d9d9d9; }
+.legend-guard-matin { background: #e6ccff; }
+.legend-guard-am { background: #006a4e; }
+.legend-weekend { background: #dbe6ff; }
+.legend-holiday { background: #c8f2c8; }
+
     /* ============= PANNEAU INFOS PLANNING ============= */
     #infos-planning {
       max-width: 1200px;
@@ -312,6 +360,33 @@
   margin-top: -4px;
 }
 
+    /* ===== Apparence panneau Infos Planning ===== */
+#infos-planning {
+  max-width: 350px;
+  margin: 20px auto;
+  background: #ffffff;
+  padding: 14px;
+  border-radius: 8px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.25);
+  font-size: 0.9em;
+  line-height: 1.4em;
+}
+
+#infos-planning h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 1.1em;
+  text-align: center;
+}
+
+#infos-planning ul {
+  padding-left: 20px;
+}
+
+#infos-planning li {
+  margin-bottom: 6px;
+}
+
   </style>
 </head>
 <body>
@@ -367,16 +442,26 @@
 
   <!-- Panneau d'informations du planning (visible pour tous) -->
   <div id="infos-planning">
-    <h3>Infos planning</h3>
-    <ul>
-      <li><strong>Garde 24</strong> : … (à compléter)</li>
-      <li><strong>Garde 12 J</strong> : …</li>
-      <li><strong>Garde 12 N</strong> : …</li>
-      <li><strong>1/2 G matin</strong> : …</li>
-      <li><strong>1/2 G après-midi</strong> : …</li>
-      <li><strong>Couleurs</strong> : week-end en bleu, fériés en vert, etc.</li>
-    </ul>
-  </div>
+  <h3>Légende du planning</h3>
+
+  <ul>
+    <li><strong style="color:#ffd39b;">Garde 24h :</strong> 2 unités</li>
+    <li><strong style="color:#40e0d0;">Garde 12h Jour :</strong> 1 unité</li>
+    <li><strong style="color:#d9d9d9;">Garde 12h Nuit :</strong> 1 unité</li>
+    <li><strong style="color:#e6ccff;">1/2 Garde matin :</strong> 0,5</li>
+    <li><strong style="color:#006a4e;">1/2 Garde après-midi :</strong> 0,5</li>
+  </ul>
+
+  <h4>Couleurs du planning</h4>
+  <ul>
+    <li><span style="background:#dbe6ff;padding:2px 6px;border-radius:4px;">Weekend</span></li>
+    <li><span style="background:#c8f2c8;padding:2px 6px;border-radius:4px;">Jour férié</span></li>
+    <li><span style="background:#9dc3e6;padding:2px 6px;border-radius:4px;">Interdiction équipe 1</span></li>
+    <li><span style="background:#ffe699;padding:2px 6px;border-radius:4px;">Interdiction équipe 2</span></li>
+    <li><span style="background:#f4b184;padding:2px 6px;border-radius:4px;">Interdiction commune</span></li>
+  </ul>
+</div>
+
     
   <div id="parametres-panel">
     <h2>⚙ Paramètres administrateur</h2>
